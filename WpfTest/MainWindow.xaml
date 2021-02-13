@@ -3,10 +3,85 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:WpfTest"
+        xmlns:local="clr-namespace:WpfTest.ViewModels"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="Рассыльщик писем" Height="450" Width="800">
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="0.06*"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+        </Grid.RowDefinitions>
+        <Menu Grid.Row="0">
+            <MenuItem Header="_Файл">
+                <MenuItem Name="LoadSmtp" Header="_Загрузить данные исходящей почты"/>
+                <MenuItem Name="LoadEmails" Header="_Загрузить адресную книгу"/>
+                <Separator/>
+                <MenuItem Name="Quit" Header="_Выход" Click="Quit_Click"/>
+            </MenuItem>
+        </Menu>
+        <TabControl Grid.Row="1">
+            <TabItem Header="Письмо"></TabItem>
+            <TabItem Header="Планировщик"></TabItem>
+            <TabItem Header="Справочники">
+                <TabControl>
+                    <TabItem Header="Сервисы исходящей почты"></TabItem>
+                    <TabItem Header="Шаблоны писем"></TabItem>
+                    <TabItem Header="Адресная книга">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="25*"></RowDefinition>
+                                <RowDefinition Height="162*"></RowDefinition>
+                            </Grid.RowDefinitions>
+                            <Grid Grid.Row="1">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="222*"/>
+                                    <ColumnDefinition Width="175*"/>
+                                </Grid.ColumnDefinitions>
+                                <GroupBox Grid.Column="0" Header="Список адресатов">
+                                    <DockPanel>
+                                        <UniformGrid DockPanel.Dock="Bottom" Rows="1" Margin="2">
+                                            <Button Name="_AddAddress" Content="Добавить" Margin="3" Click="_AddAddress_Click"/>
+                                            <Button Name="_DeleteAddress" Content="Удалить" Margin="3" Click="_DeleteAddress_Click"/>
+                                        </UniformGrid>
+                                        <ListView Name="EmailAddresses" ItemsSource="{Binding EmailAddresses}" SelectedItem="{Binding SelectedEmailAddress}">
+                                            <ListView.View>
+                                                <GridView>
+                                                    <GridViewColumn DisplayMemberBinding="{Binding Path=Person}">Адресат</GridViewColumn>
+                                                    <GridViewColumn DisplayMemberBinding="{Binding Path=Company}">Компания</GridViewColumn>
+                                                    <GridViewColumn DisplayMemberBinding="{Binding Path=EMail}">Email</GridViewColumn>
+                                                </GridView>
+                                            </ListView.View>
+                                        </ListView>
+                                    </DockPanel>
+                                </GroupBox>
+                                <GroupBox Grid.Column="1" Header="Выбранный адресат">
+                                    <StackPanel Margin="10,10,10,10">
+                                        <StackPanel Orientation="Horizontal" Margin="5">
+                                            <TextBlock Text="Адресат" Width="90"/>
+                                            <TextBox Width="200" Text="{Binding SelectedEmailAddress.Person}"/>
+                                        </StackPanel>
+                                        <StackPanel Orientation="Horizontal" Margin="5">
+                                            <TextBlock Text="Компания" Width="90"/>
+                                            <TextBox Width="200" Text="{Binding SelectedEmailAddress.Company}"/>
+                                        </StackPanel>
+                                        <StackPanel Orientation="Horizontal" Margin="5">
+                                            <TextBlock Text="Email" Width="90"/>
+                                            <TextBox Width="200" Text="{Binding SelectedEmailAddress.EMail}"/>
+                                        </StackPanel>
+                                        <StackPanel Orientation="Horizontal" Margin="5">
+                                            <TextBlock Text="" Width="90"/>
+                                        </StackPanel>
+                                        <StackPanel Orientation="Horizontal" Margin="5">
+                                            <Button Name="SaveEmail" Content="Сохранить изменения в БД" Margin="70, 0" Click="SaveEmail_Click"/>
+                                        </StackPanel>
+                                    </StackPanel>
 
+                                </GroupBox>
+                            </Grid>
+                        </Grid>
+                    </TabItem>
+                </TabControl>
+            </TabItem>
+        </TabControl>
     </Grid>
 </Window>

@@ -24,5 +24,25 @@ namespace WpfTest
         {
             InitializeComponent();
         }
+
+        private void Quit_Click(object sender, RoutedEventArgs e)
+        {
+            Close();
+        }
+
+        private void _AddAddress_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void _DeleteAddress_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void SaveEmail_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }
