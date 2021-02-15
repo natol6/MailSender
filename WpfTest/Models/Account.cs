@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.ComponentModel;
 using System.Collections.ObjectModel;
+using System.Security;
 
 namespace WpfTest.Models
 {
@@ -39,6 +40,16 @@ namespace WpfTest.Models
             {
                 securepassword = value;
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SecurePassword)));
+            }
+        }
+        private int mailserviceid;
+        public int MailServiceId
+        {
+            get => mailserviceid;
+            set
+            {
+                mailserviceid = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(MailServiceId)));
             }
         }
     }
