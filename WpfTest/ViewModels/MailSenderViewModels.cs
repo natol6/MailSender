@@ -7,6 +7,9 @@ using System.ComponentModel;
 using System.Collections.ObjectModel;
 using WpfTest.Models;
 using System.Security;
+using System.Net;
+using System.Net.Mail;
+using System.Windows;
 
 
 namespace WpfTest.ViewModels
@@ -57,8 +60,49 @@ namespace WpfTest.ViewModels
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SelectedAccount)));
             }
         }
-        DBConnectMailSender dbconnectMS = new DBConnectMailSender();
-        DBConnectAddressBook dbconnectAB;
+        private MailService selectedMailServiceForEmail;
+        public MailService SelectedMailServiceForEmail
+        {
+            get => selectedMailServiceForEmail;
+            set
+            {
+                selectedMailServiceForEmail = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SelectedMailServiceForEmail)));
+            }
+        }
+        private MessagePattern selectedMessagePatternForEmail;
+        public MessagePattern SelectedMessagePatternForEmail
+        {
+            get => selectedMessagePatternForEmail;
+            set
+            {
+                selectedMessagePatternForEmail = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SelectedMessagePatternForEmail)));
+            }
+        }
+        private EmailAddress selectedEmailAddressForEmail;
+        public EmailAddress SelectedEmailAddressForEmail
+        {
+            get => selectedEmailAddressForEmail;
+            set
+            {
+                selectedEmailAddressForEmail = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SelectedEmailAddressForEmail)));
+            }
+        }
+        private Account selectedAccountForEmail;
+        public Account SelectedAccountForEmail
+        {
+            get => selectedAccountForEmail;
+            set
+            {
+                selectedAccountForEmail = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SelectedAccountForEmail)));
+            }
+        }
+        private DBConnectMailSender dbconnectMS = new DBConnectMailSender();
+        private DBConnectAddressBook dbconnectAB;
+        public bool UseSSL { get; set; } = true;
         public MailSenderViewModels()
         {
             LoadMailSet();
@@ -67,12 +111,13 @@ namespace WpfTest.ViewModels
         {
             
             var accounts = dbconnectMS.DbGetAccounts();
-            var mailservises = dbconnectMS.DbGetMailServices();
-            foreach (MailService ms in mailservises)
+            var mailservices = dbconnectMS.DbGetMailServices();
+            foreach (MailService ms in mailservices)
                 MailServices.Add(new MailService
                 {
                     Id = ms.Id,
                     Title = ms.Title,
+                    SmtpServer = ms.SmtpServer,
                     DomainName = ms.DomainName 
                 });
             foreach (MailService ms in MailServices)
@@ -83,14 +128,46 @@ namespace WpfTest.ViewModels
                     ms.Accounts.Add(a);
                 }
             }
-            
             var messagepatterns = dbconnectMS.DbGetMessagePattern();
             foreach (MessagePattern mp in messagepatterns)
                 MessagePatterns.Add(mp);
-            
-
         }
-        
+        public void SendMessage()
+        {
+            var from = new MailAddress(string.Format(@"{0}{1}", SelectedAccountForEmail.Login, SelectedMailServiceForEmail.DomainName),
+                SelectedAccountForEmail.Person);
+            var to = new MailAddress(SelectedEmailAddressForEmail.EMail, SelectedEmailAddressForEmail.Person);
+
+            var message = new MailMessage(from, to);
+            message.Subject = SelectedMessagePatternForEmail.Subject;
+            message.Body = SelectedMessagePatternForEmail.Body;
+            var client = new SmtpClient(SelectedMailServiceForEmail.SmtpServer, 587);
+                client.EnableSsl = true;
+            if (!UseSSL)
+            {
+                client = new SmtpClient(SelectedMailServiceForEmail.SmtpServer, 587);
+                client.EnableSsl = false;
+            }
+            client.Credentials = new NetworkCredential(string.Format(@"{0}{1}", SelectedAccountForEmail.Login, SelectedMailServiceForEmail.DomainName), SelectedAccountForEmail.SecurePassword);
+            
+            client.DeliveryMethod = SmtpDeliveryMethod.Network;
+            try
+            {
+                client.Send(message);
+
+                MessageBox.Show("Почта успешно отправлена!", "Отправка почты", MessageBoxButton.OK, MessageBoxImage.Information);
+
+            }
+            catch (SmtpException)
+            {
+                MessageBox.Show("Ошибка авторизации", "Ошибка отправки почты", MessageBoxButton.OK, MessageBoxImage.Warning);
+            }
+            catch (TimeoutException)
+            {
+                MessageBox.Show("Ошибка адреса сервера", "Ошибка отправки почты", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+        #region InteractionDBMailSender
         public void AddMessagePattern()
         {
             SelectedMessagePattern = null;
@@ -112,7 +189,8 @@ namespace WpfTest.ViewModels
         public void AddAccount()
         {
             SelectedAccount = null;
-            SelectedMailService.Accounts.Add(dbconnectMS.AddBdAccount(new Account { Login = "input_login", MailServiceId = SelectedMailService.Id }));
+            Account ac = dbconnectMS.AddBdAccount(new Account { Login = "input_login", MailServiceId = SelectedMailService.Id });
+            SelectedMailService.Accounts.Add(ac);
             SelectedAccount = SelectedMailService.Accounts.OrderBy(t => t.Id).LastOrDefault();
 
         }
@@ -129,13 +207,16 @@ namespace WpfTest.ViewModels
         }
         public void AddMailServise()
         {
+            SelectedAccount = null;
             SelectedMailService = null;
-            MailServices.Add(dbconnectMS.AddBdMailService(new MailService { Title = "New MailService", DomainName = "" }));
+            MailService ms = dbconnectMS.AddBdMailService(new MailService { Title = "New MailService" });
+            MailServices.Add(ms);
             SelectedMailService = MailServices.OrderBy(t => t.Id).LastOrDefault();
 
         }
         public void DeleteMailServise()
         {
+            SelectedAccount = null;
             foreach(Account ac in SelectedMailService.Accounts)
             {
                 dbconnectMS.DeleteBdAccount(ac.Id);
@@ -149,6 +230,7 @@ namespace WpfTest.ViewModels
             dbconnectMS.UpdateBdMailService(SelectedMailService);
 
         }
+        #endregion
         #region ConnectAddressBook
         public void LoadAddressBook_DB()
         {

@@ -42,6 +42,16 @@ namespace WpfTest.Models
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SecurePassword)));
             }
         }
+        private string person;
+        public string Person
+        {
+            get => person;
+            set
+            {
+                person = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Person)));
+            }
+        }
         private int mailserviceid;
         public int MailServiceId
         {

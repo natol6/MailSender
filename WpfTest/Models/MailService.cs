@@ -31,6 +31,16 @@ namespace WpfTest.Models
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Title)));
             }
         }
+        private string smtpServer;
+        public string SmtpServer
+        {
+            get => smtpServer;
+            set
+            {
+                smtpServer = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SmtpServer)));
+            }
+        }
         private string domainname;
         public string DomainName
         {

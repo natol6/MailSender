@@ -114,5 +114,23 @@ namespace WpfTest
             MailSenderViewModels msvm = (MailSenderViewModels)DataContext;
             msvm.LoadAddressBook_Other();
         }
+
+        private void CheckBox_Unchecked(object sender, RoutedEventArgs e)
+        {
+            MailSenderViewModels msvm = (MailSenderViewModels)DataContext;
+            msvm.UseSSL = false;
+        }
+
+        private void SendMessage_Click(object sender, RoutedEventArgs e)
+        {
+            MailSenderViewModels msvm = (MailSenderViewModels)DataContext;
+            msvm.SendMessage();
+        }
+
+        private void CheckBox_Checked(object sender, RoutedEventArgs e)
+        {
+            MailSenderViewModels msvm = (MailSenderViewModels)DataContext;
+            msvm.UseSSL = true;
+        }
     }
 }

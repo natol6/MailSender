@@ -83,6 +83,7 @@ namespace WpfTest.ViewModels
             {
                 acdb.Login = ac.Login;
                 acdb.SecurePassword = ac.SecurePassword;
+                acdb.Person = ac.Person;
                 db.Accounts.Update(acdb);
                 db.SaveChanges();
             }
@@ -109,6 +110,7 @@ namespace WpfTest.ViewModels
             if (msdb != null)
             {
                 msdb.Title = ms.Title;
+                msdb.SmtpServer = ms.SmtpServer;
                 msdb.DomainName = ms.DomainName;
                 db.MailServices.Update(msdb);
                 db.SaveChanges();
