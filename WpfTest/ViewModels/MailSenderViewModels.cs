@@ -141,7 +141,7 @@ namespace WpfTest.ViewModels
             var message = new MailMessage(from, to);
             message.Subject = SelectedMessagePatternForEmail.Subject;
             message.Body = SelectedMessagePatternForEmail.Body;
-            var client = new SmtpClient(SelectedMailServiceForEmail.SmtpServer, 587);
+            var client = new SmtpClient(SelectedMailServiceForEmail.SmtpServer, 25);
                 client.EnableSsl = true;
             if (!UseSSL)
             {
@@ -151,6 +151,7 @@ namespace WpfTest.ViewModels
             client.Credentials = new NetworkCredential(string.Format(@"{0}{1}", SelectedAccountForEmail.Login, SelectedMailServiceForEmail.DomainName), SelectedAccountForEmail.SecurePassword);
             
             client.DeliveryMethod = SmtpDeliveryMethod.Network;
+            client.UseDefaultCredentials = false;
             try
             {
                 client.Send(message);
