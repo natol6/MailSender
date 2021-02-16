@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using WpfTest.ViewModels;
 
 namespace WpfTest
 {
@@ -23,6 +24,113 @@ namespace WpfTest
         public MainWindow()
         {
             InitializeComponent();
+        }
+
+        private void Quit_Click(object sender, RoutedEventArgs e)
+        {
+            Close();
+        }
+
+        private void AddAddress_Click(object sender, RoutedEventArgs e)
+        {
+            MailSenderViewModels msvm = (MailSenderViewModels)DataContext;
+            msvm.AddEmailAddress();
+        }
+
+        private void DeleteAddress_Click(object sender, RoutedEventArgs e)
+        {
+            MailSenderViewModels msvm = (MailSenderViewModels)DataContext;
+            msvm.DeleteEmailAddress();
+        }
+
+        private void SaveEmail_Click(object sender, RoutedEventArgs e)
+        {
+            MailSenderViewModels msvm = (MailSenderViewModels)DataContext;
+            msvm.UpdateEmailAddress();
+        }
+
+        private void AddMessage_Click(object sender, RoutedEventArgs e)
+        {
+            MailSenderViewModels msvm = (MailSenderViewModels)DataContext;
+            msvm.AddMessagePattern();
+        }
+
+        private void DeleteMessage_Click(object sender, RoutedEventArgs e)
+        {
+            MailSenderViewModels msvm = (MailSenderViewModels)DataContext;
+            msvm.DeleteMessagePattern();
+        }
+
+        private void SaveMessage_Click(object sender, RoutedEventArgs e)
+        {
+            MailSenderViewModels msvm = (MailSenderViewModels)DataContext;
+            msvm.UpdateMessagePattern();
+        }
+
+        private void AddMailService_Click(object sender, RoutedEventArgs e)
+        {
+            MailSenderViewModels msvm = (MailSenderViewModels)DataContext;
+            msvm.AddMailServise();
+        }
+
+        private void DeleteMailService_Click(object sender, RoutedEventArgs e)
+        {
+            MailSenderViewModels msvm = (MailSenderViewModels)DataContext;
+            msvm.DeleteMailServise();
+        }
+
+        private void SaveMailService_Click(object sender, RoutedEventArgs e)
+        {
+            MailSenderViewModels msvm = (MailSenderViewModels)DataContext;
+            msvm.UpdateMailService();
+        }
+
+        private void AddAccount_Click(object sender, RoutedEventArgs e)
+        {
+            MailSenderViewModels msvm = (MailSenderViewModels)DataContext;
+            msvm.AddAccount();
+        }
+
+        private void DeleteAccount_Click(object sender, RoutedEventArgs e)
+        {
+            MailSenderViewModels msvm = (MailSenderViewModels)DataContext;
+            msvm.DeleteAccount();
+        }
+
+        private void SaveAccount_Click(object sender, RoutedEventArgs e)
+        {
+            MailSenderViewModels msvm = (MailSenderViewModels)DataContext;
+            msvm.UpdateAccount();
+        }
+
+        private void LoadAB_DB_Click(object sender, RoutedEventArgs e)
+        {
+            MailSenderViewModels msvm = (MailSenderViewModels)DataContext;
+            msvm.LoadAddressBook_DB();
+        }
+
+        private void LoadAB_Other_Click(object sender, RoutedEventArgs e)
+        {
+            MailSenderViewModels msvm = (MailSenderViewModels)DataContext;
+            msvm.LoadAddressBook_Other();
+        }
+
+        private void CheckBox_Unchecked(object sender, RoutedEventArgs e)
+        {
+            MailSenderViewModels msvm = (MailSenderViewModels)DataContext;
+            msvm.UseSSL = false;
+        }
+
+        private void SendMessage_Click(object sender, RoutedEventArgs e)
+        {
+            MailSenderViewModels msvm = (MailSenderViewModels)DataContext;
+            msvm.SendMessage();
+        }
+
+        private void CheckBox_Checked(object sender, RoutedEventArgs e)
+        {
+            MailSenderViewModels msvm = (MailSenderViewModels)DataContext;
+            msvm.UseSSL = true;
         }
     }
 }

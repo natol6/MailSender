@@ -3,10 +3,233 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:WpfTest"
+        xmlns:local="clr-namespace:WpfTest.ViewModels"
+        xmlns:vm="clr-namespace:WpfTest.ViewModels"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="Рассыльщик писем" Height="450" Width="800">
+    <Window.DataContext>
+        <vm:MailSenderViewModels/>
+    </Window.DataContext>
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="0.06*"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+        </Grid.RowDefinitions>
+        <Menu Grid.Row="0">
+            <MenuItem Header="_Файл">
+                <MenuItem Name="LoadAB_DB" Header="_Загрузить адресную книгу из внутренней БД" Click="LoadAB_DB_Click"/>
+                <MenuItem Name="LoadAB_Other" Header="_Загрузить адресную книгу из другого источника" Click="LoadAB_Other_Click"/>
+                <Separator/>
+                <MenuItem Name="Quit" Header="_Выход" Click="Quit_Click"/>
+            </MenuItem>
+        </Menu>
+        <TabControl Grid.Row="1">
+            <TabItem Header="Письмо">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="190*"></ColumnDefinition>
+                        <ColumnDefinition Width="287*"/>
+                        <ColumnDefinition Width="317*"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="51*"></RowDefinition>
+                        <RowDefinition Height="285*"></RowDefinition>
+                        <RowDefinition Height="46*"></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <StackPanel Grid.Row="0" Grid.ColumnSpan="3" Orientation="Horizontal" Margin="10,10,10,10">
+                        <TextBlock Text="Сервис исходящей почты" Width="150" VerticalAlignment="Center"/>
+                        <ComboBox Width="100" Height="20" ItemsSource="{Binding MailServices}" SelectedItem="{Binding SelectedMailServiceForEmail}" DisplayMemberPath="Title"/>
+                        <TextBlock Text="Аккаунт исходящей почты" Width="150" VerticalAlignment="Center" Margin="10,0,0,0"/>
+                        <ComboBox Width="100" Height="20" ItemsSource="{Binding SelectedMailServiceForEmail.Accounts}" SelectedItem="{Binding SelectedAccountForEmail}" DisplayMemberPath="Login"/>
+                        <TextBlock Text="Использовать шифрование SSL" Width="180" VerticalAlignment="Center" Margin="10,0,0,0"/>
+                        <CheckBox VerticalAlignment="Center" IsChecked="True" Unchecked="CheckBox_Unchecked" Checked="CheckBox_Checked"/>
+                    </StackPanel>
+                    <StackPanel Grid.Row="1" Grid.ColumnSpan="3" Margin="0,0,0,46" Grid.RowSpan="2">
+                        <StackPanel  Orientation="Horizontal" Margin="10,10,10,10">
+                            <TextBlock Text="Адресат" Width="80" VerticalAlignment="Center"/>
+                            <ComboBox Width="500" Height="20" IsReadOnly="False" IsEditable="True" ItemsSource="{Binding EmailAddresses}" SelectedItem="{Binding SelectedEmailAddressForEmail}" DisplayMemberPath="EMail"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" Margin="10,10,10,10">
+                            <TextBlock Text="Тема письма" Width="80" VerticalAlignment="Center"/>
+                            <ComboBox Width="500" Height="20" IsReadOnly="False" IsEditable="True" ItemsSource="{Binding MessagePatterns}" SelectedItem="{Binding SelectedMessagePatternForEmail}" DisplayMemberPath="Subject"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" Margin="10,10,10,10">
+                            <TextBlock Text="Текст письма" Width="80" VerticalAlignment="Top"/>
+                            <TextBox Width="500" Height="170" TextWrapping="Wrap" AcceptsReturn="True" VerticalScrollBarVisibility="Auto"
+                                HorizontalScrollBarVisibility="Auto" SpellCheck.IsEnabled="True" Language="ru-ru" Text="{Binding Path=SelectedMessagePatternForEmail.Body}"/>
+                        </StackPanel>
+                    </StackPanel>
+                    <Button Name="SendMessage" Grid.Row="2" Content="Отправить письмо" Width="120" Margin="15,10,0,10" HorizontalAlignment="Left" Click="SendMessage_Click"/>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Планировщик"></TabItem>
+            <TabItem Header="Справочники">
+                <TabControl>
+                    <TabItem Header="Сервисы исходящей почты">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="0.33*"></ColumnDefinition>
+                                <ColumnDefinition Width="*"></ColumnDefinition>
+                            </Grid.ColumnDefinitions>
+                            <GroupBox Grid.Column="0" Header="Сервисы Email">
+                                <DockPanel>
+                                    <UniformGrid DockPanel.Dock="Bottom" Rows="1" Margin="2">
+                                        <Button Name="AddMailService" Content="Добавить" Margin="3" Click="AddMailService_Click"/>
+                                        <Button Name="DeleteMailService" Content="Удалить" Margin="3" Click="DeleteMailService_Click"/>
+                                    </UniformGrid>
+                                    <ListView Name="Mailservices" ItemsSource="{Binding MailServices}" SelectedItem="{Binding SelectedMailService}" DisplayMemberPath="Title"/>
+                                </DockPanel>
+                            </GroupBox>
+                            <GroupBox Grid.Column="1" Header="Выбранный сервис Email">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="79*"></ColumnDefinition>
+                                        <ColumnDefinition Width="37*"></ColumnDefinition>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="155*"></RowDefinition>
+                                        <RowDefinition Height="176*"></RowDefinition>
+                                    </Grid.RowDefinitions>
+                                    <StackPanel Grid.Column="0" Grid.Row="0" Margin="10,10,10,10">
+                                        <StackPanel Orientation="Horizontal" Margin="5">
+                                            <TextBlock Text="Наименование" Width="90"/>
+                                            <TextBox Width="200" Text="{Binding SelectedMailService.Title}"/>
+                                        </StackPanel>
+                                        <StackPanel Orientation="Horizontal" Margin="5">
+                                            <TextBlock Text="SMTP-сервер" Width="90"/>
+                                            <TextBox Width="200" Text="{Binding SelectedMailService.SmtpServer}"/>
+                                        </StackPanel>
+                                        <StackPanel Orientation="Horizontal" Margin="5">
+                                            <TextBlock Text="Имя домена" Width="90"/>
+                                            <TextBox Width="200" Text="{Binding SelectedMailService.DomainName}"/>
+                                        </StackPanel>
+                                        <StackPanel Orientation="Horizontal" Height="5"/>
+                                        <StackPanel Orientation="Horizontal" Margin="5">
+                                            <Button Name="SaveMailService" Content="Сохранить изменения в БД" Click="SaveMailService_Click"/>
+                                        </StackPanel>
+                                    </StackPanel>
+                                    <GroupBox Grid.Row="0" Grid.RowSpan="2"  Header="Аккаунты сервиса Email" Grid.ColumnSpan="2" Margin="395,0,0,0">
+                                        <DockPanel>
+                                            <UniformGrid DockPanel.Dock="Bottom" Rows="1" Margin="2">
+                                                <Button Name="AddAccount" Content="Добавить" Margin="3" Click="AddAccount_Click"/>
+                                                <Button Name="DeleteAccount" Content="Удалить" Margin="3" Click="DeleteAccount_Click"/>
+                                            </UniformGrid>
+                                            <ListView Name="Accounts" ItemsSource="{Binding SelectedMailService.Accounts}" SelectedItem="{Binding SelectedAccount}" DisplayMemberPath="Login"/>
+                                        </DockPanel>
+                                    </GroupBox>
+                                    <GroupBox Grid.Column="0" Grid.Row="1" Header="Выбранный аккаунт">
+                                        <StackPanel Margin="10,10,10,10">
+                                            <StackPanel Orientation="Horizontal" Margin="5">
+                                                <TextBlock Text="Логин" Width="90"/>
+                                                <TextBox Width="200" Text="{Binding SelectedAccount.Login}"/>
+                                            </StackPanel>
+                                            <StackPanel Orientation="Horizontal" Margin="5">
+                                                <TextBlock Text="Пароль" Width="90"/>
+                                                <TextBox Width="200" Text="{Binding SelectedAccount.SecurePassword}"/>
+                                            </StackPanel>
+                                            <StackPanel Orientation="Horizontal" Margin="5">
+                                                <TextBlock Text="Владелец" Width="90"/>
+                                                <TextBox Width="200" Text="{Binding SelectedAccount.Person}"/>
+                                            </StackPanel>
+                                            <StackPanel Orientation="Horizontal" Height="5"/>
+                                            <StackPanel Orientation="Horizontal" Margin="5">
+                                                <Button Name="SaveAccount" Content="Сохранить изменения в БД" Click="SaveAccount_Click"/>
+                                            </StackPanel>
+                                        </StackPanel>
+                                    </GroupBox>
+                                </Grid>
+                            </GroupBox>
+                        </Grid>
+                    </TabItem>
+                    <TabItem Header="Шаблоны писем">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="0.33*"></ColumnDefinition>
+                                <ColumnDefinition Width="*"></ColumnDefinition>
+                            </Grid.ColumnDefinitions>
+                            <GroupBox Grid.Column="0" Header="Шаблоны писем">
+                                <DockPanel>
+                                    <UniformGrid DockPanel.Dock="Bottom" Rows="1" Margin="2">
+                                        <Button Name="AddMessage" Content="Добавить" Margin="3" Click="AddMessage_Click"/>
+                                        <Button Name="DeleteMessage" Content="Удалить" Margin="3" Click="DeleteMessage_Click"/>
+                                    </UniformGrid>
+                                    <ListView Name="Messages" ItemsSource="{Binding MessagePatterns}" SelectedItem="{Binding SelectedMessagePattern}" DisplayMemberPath="Subject"/>
+                                </DockPanel>
+                            </GroupBox>
+                            <GroupBox Grid.Column="1" Header="Выбранный шаблон письма">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="0.25*"></ColumnDefinition>
+                                        <ColumnDefinition Width="*"></ColumnDefinition>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="45*"></RowDefinition>
+                                        <RowDefinition Height="255*"></RowDefinition>
+                                        <RowDefinition Height="31*"></RowDefinition>
+                                    </Grid.RowDefinitions>
+                                    <TextBlock Text="Тема письма" HorizontalAlignment="Center" VerticalAlignment="Center" Height="16" Width="70"/>
+                                    <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding SelectedMessagePattern.Subject}" Margin="5,10,5,10"/>
+                                    <TextBlock Grid.Row="1" Text="Текст письма" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,10,0,0" Height="16" Width="72"/>
+                                    <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding SelectedMessagePattern.Body}" Margin="5,10,5,10"/>
+                                    <Button Name="SaveMessage" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Left" Margin="5" Content="Сохранить изменения в БД" Click="SaveMessage_Click"></Button>
+                                </Grid>
+                            </GroupBox>
+                        </Grid>
+                    </TabItem>
+                    <TabItem Header="Адресная книга">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="25*"></RowDefinition>
+                                <RowDefinition Height="162*"></RowDefinition>
+                            </Grid.RowDefinitions>
+                            <Grid Grid.Row="1">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="222*"/>
+                                    <ColumnDefinition Width="175*"/>
+                                </Grid.ColumnDefinitions>
+                                <GroupBox Grid.Column="0" Header="Список адресатов">
+                                    <DockPanel>
+                                        <UniformGrid DockPanel.Dock="Bottom" Rows="1" Margin="2">
+                                            <Button Name="AddAddress" Content="Добавить" Margin="3" Click="AddAddress_Click"/>
+                                            <Button Name="DeleteAddress" Content="Удалить" Margin="3" Click="DeleteAddress_Click"/>
+                                        </UniformGrid>
+                                        <ListView Name="EmailAddresses" ItemsSource="{Binding EmailAddresses}" SelectedItem="{Binding SelectedEmailAddress}">
+                                            <ListView.View>
+                                                <GridView>
+                                                    <GridViewColumn DisplayMemberBinding="{Binding Path=Person}">Адресат</GridViewColumn>
+                                                    <GridViewColumn DisplayMemberBinding="{Binding Path=Company}">Компания</GridViewColumn>
+                                                    <GridViewColumn DisplayMemberBinding="{Binding Path=EMail}">Email</GridViewColumn>
+                                                </GridView>
+                                            </ListView.View>
+                                        </ListView>
+                                    </DockPanel>
+                                </GroupBox>
+                                <GroupBox Grid.Column="1" Header="Выбранный адресат">
+                                    <StackPanel Margin="10,10,10,10">
+                                        <StackPanel Orientation="Horizontal" Margin="5">
+                                            <TextBlock Text="Адресат" Width="90"/>
+                                            <TextBox Width="200" Text="{Binding SelectedEmailAddress.Person}"/>
+                                        </StackPanel>
+                                        <StackPanel Orientation="Horizontal" Margin="5">
+                                            <TextBlock Text="Компания" Width="90"/>
+                                            <TextBox Width="200" Text="{Binding SelectedEmailAddress.Company}"/>
+                                        </StackPanel>
+                                        <StackPanel Orientation="Horizontal" Margin="5">
+                                            <TextBlock Text="Email" Width="90"/>
+                                            <TextBox Width="200" Text="{Binding SelectedEmailAddress.EMail}"/>
+                                        </StackPanel>
+                                        <StackPanel Orientation="Horizontal" Height="10" Margin="5"/>
+                                        <StackPanel Orientation="Horizontal" Margin="5">
+                                            <Button Name="SaveEmail" Content="Сохранить изменения в БД" Click="SaveEmail_Click"/>
+                                        </StackPanel>
+                                    </StackPanel>
 
+                                </GroupBox>
+                            </Grid>
+                        </Grid>
+                    </TabItem>
+                </TabControl>
+            </TabItem>
+        </TabControl>
     </Grid>
 </Window>
