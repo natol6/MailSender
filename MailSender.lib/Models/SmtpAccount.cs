@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
+
 namespace MailSender.lib.Models
 {
     public class SmtpAccount : INotifyPropertyChanged
@@ -41,14 +42,14 @@ namespace MailSender.lib.Models
                 OnPropertyChanged("Password");
             }
         }
-        private string _Person;
-        public string Person
+        private string _Person_Comnany;
+        public string Person_Company
         {
-            get => _Person;
+            get => _Person_Comnany;
             set
             {
-                _Person = value;
-                OnPropertyChanged("Person");
+                _Person_Comnany = value;
+                OnPropertyChanged("Person_Company");
             }
         }
         private int _SmtpServerid;

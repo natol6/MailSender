@@ -14,15 +14,16 @@ namespace MailSender.lib.Service
             string pas = new System.Net.NetworkCredential(string.Empty, str).Password;
             return new (pas.Select(c => (char) (c + key)).ToArray());
         }
-        public static SecureString Decode(string str, int key = 1)
+        public static string Decode(string str, int key = 1)
         {
-            using SecureString sstr = new SecureString();
-            sstr.Clear();
-            foreach(char c in str)
-            {
-                sstr.AppendChar((char)(c - key));
-            }
-            return sstr;
+            //using SecureString sstr = new SecureString();
+            //sstr.Clear();
+            //foreach(char c in str)
+            //{
+            //sstr.AppendChar((char)(c - key));
+            //}
+            //return sstr;
+            return new(str.Select(c => (char)(c + key)).ToArray());
         }
     }
 }

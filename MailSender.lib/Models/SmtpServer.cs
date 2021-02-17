@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Collections.ObjectModel;
 
 namespace MailSender.lib.Models
 {
@@ -70,7 +71,8 @@ namespace MailSender.lib.Models
                 _UseSSL = value;
                 OnPropertyChanged("UseSSL");
             }
-        }
+        } 
+        public ObservableCollection<SmtpAccount>  SmtpAccounts { get; set; } = new ObservableCollection<SmtpAccount>();
         private void OnPropertyChanged([CallerMemberName] string prop = "")
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));
