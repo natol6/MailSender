@@ -22,14 +22,14 @@ namespace MailSender.lib.Models
                 OnPropertyChanged("Id");
             }
         }
-        private string _Login;
-        public string Login
+        private string _AccountEmail;
+        public string AccountEmail
         {
-            get => _Login;
+            get => _AccountEmail;
             set
             {
-                _Login = value;
-                OnPropertyChanged("Login");
+                _AccountEmail = value;
+                OnPropertyChanged("AccountEmail");
             }
         }
         private string _Password;
@@ -59,7 +59,17 @@ namespace MailSender.lib.Models
             set
             {
                 _SmtpServerid = value;
-                OnPropertyChanged("MailServiceId");
+                OnPropertyChanged("SmtpServerId");
+            }
+        }
+        private SmtpServer _Smtp_Server;
+        public SmtpServer Smtp_Server
+        {
+            get => _Smtp_Server;
+            set
+            {
+                _Smtp_Server = value;
+                OnPropertyChanged("Smtp_Server");
             }
         }
         private void OnPropertyChanged([CallerMemberName] string prop = "")

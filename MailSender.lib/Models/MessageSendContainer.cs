@@ -22,8 +22,8 @@ namespace MailSender.lib.Models
                 OnPropertyChanged("Id");
             }
         }
-        private SmtpServer _SmtpServerUse;
-        public SmtpServer SmtpServerUse
+        private string _SmtpServerUse;
+        public string SmtpServerUse
         {
             get => _SmtpServerUse;
             set
@@ -32,14 +32,64 @@ namespace MailSender.lib.Models
                 OnPropertyChanged("SmtpServerUse");
             }
         }
-        private SmtpAccount _SmtpAccountUse;
-        public SmtpAccount SmtpAccountUse
+        private int _PortUse;
+        public int PortUse
         {
-            get => _SmtpAccountUse;
+            get => _PortUse;
             set
             {
-                _SmtpAccountUse = value;
-                OnPropertyChanged("SmtpAccountUse");
+                _PortUse = value;
+                OnPropertyChanged("PortUse");
+            }
+        }
+        private bool _SSLUse;
+        public bool SSLUse
+        {
+            get => _SSLUse;
+            set
+            {
+                _SSLUse = value;
+                OnPropertyChanged("SSLUse");
+            }
+        }
+        private string _SmtpAccountEmailUse;
+        public string SmtpAccountEmailUse
+        {
+            get => _SmtpAccountEmailUse;
+            set
+            {
+                _SmtpAccountEmailUse = value;
+                OnPropertyChanged("SmtpAccountEmailUse");
+            }
+        }
+        private string _SmtpAccountPasswordlUse;
+        public string SmtpAccountPasswordUse
+        {
+            get => _SmtpAccountPasswordlUse;
+            set
+            {
+                _SmtpAccountPasswordlUse = value;
+                OnPropertyChanged("SmtpAccountPasswordUse");
+            }
+        }
+        private string _SmtpAccountPerson_CompanyUse;
+        public string SmtpAccountPerson_CompanyUse
+        {
+            get => _SmtpAccountPerson_CompanyUse;
+            set
+            {
+                _SmtpAccountPerson_CompanyUse = value;
+                OnPropertyChanged("SmtpAccountPerson_CompanyUse");
+            }
+        }
+        private string _EmailAddresses;
+        public string EmailAddresses
+        {
+            get => _EmailAddresses;
+            set
+            {
+                _EmailAddresses = value;
+                OnPropertyChanged("EmailAddresses");
             }
         }
         private string _Subject;
@@ -82,7 +132,6 @@ namespace MailSender.lib.Models
                 OnPropertyChanged("Status");
             }
         }
-        public ObservableCollection<EmailAddress> EmailAddresses { get; set; } = new ObservableCollection<EmailAddress>();
         private void OnPropertyChanged([CallerMemberName] string prop = "")
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));
