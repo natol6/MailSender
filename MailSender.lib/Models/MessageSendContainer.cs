@@ -82,14 +82,14 @@ namespace MailSender.lib.Models
                 OnPropertyChanged("SmtpAccountPerson_CompanyUse");
             }
         }
-        private string _EmailAddresses;
-        public string EmailAddresses
+        private string _EmailAddressesTo;
+        public string EmailAddressesTo
         {
-            get => _EmailAddresses;
+            get => _EmailAddressesTo;
             set
             {
-                _EmailAddresses = value;
-                OnPropertyChanged("EmailAddresses");
+                _EmailAddressesTo = value;
+                OnPropertyChanged("EmailAddressesTo");
             }
         }
         private string _Subject;

@@ -22,10 +22,10 @@ namespace MailSender.lib.Service
         {
             db.Database.EnsureCreated();
         }
-        //public IEnumerable<SmtpAccount> DbGetAccounts()
-        //{
-            //return db.Account.ToArray();
-        //}
+        public IEnumerable<SmtpAccount> DbGetAccounts()
+        {
+            return db.SmtpAccounts.ToArray();
+        }
         public IEnumerable<SmtpServer> DbGetMailServices()
         {
             return db.SmtpServers.ToArray();
@@ -65,61 +65,98 @@ namespace MailSender.lib.Service
             }
 
         }
-        /*public Account AddBdAccount(Account ac)
+        public SmtpAccount AddBdSmtpAccount(SmtpAccount ac)
         {
-            db.Accounts.Add(ac);
+            db.SmtpAccounts.Add(ac);
             db.SaveChanges();
-            return db.Accounts.OrderBy(d => d.Id).LastOrDefault();
+            return db.SmtpAccounts.OrderBy(d => d.Id).LastOrDefault();
         }
-        public void DeleteBdAccount(int id)
+        public void DeleteBdSmtpAccount(int id)
         {
-            Account ac = db.Accounts.FirstOrDefault(d => d.Id == id);
+            SmtpAccount ac = db.SmtpAccounts.FirstOrDefault(d => d.Id == id);
             if (ac != null)
             {
-                db.Accounts.Remove(ac);
+                db.SmtpAccounts.Remove(ac);
                 db.SaveChanges();
             }
         }
-        public void UpdateBdAccount(Account ac)
+        public void UpdateBdAccount(SmtpAccount ac)
         {
-            Account acdb = db.Accounts.FirstOrDefault(d => d.Id == ac.Id);
+            SmtpAccount acdb = db.SmtpAccounts.FirstOrDefault(d => d.Id == ac.Id);
             if (acdb != null)
             {
-                acdb.Login = ac.Login;
-                acdb.SecurePassword = ac.SecurePassword;
-                acdb.Person = ac.Person;
-                db.Accounts.Update(acdb);
+                acdb.AccountEmail = ac.AccountEmail;
+                acdb.Password = ac.Password;
+                acdb.Person_Company = ac.Person_Company;
+                db.SmtpAccounts.Update(acdb);
                 db.SaveChanges();
             }
 
         }
-        public MailService AddBdMailService(MailService ms)
+        public SmtpServer AddBdSmtpServer(SmtpServer serv)
         {
-            db.MailServices.Add(ms);
+            db.SmtpServers.Add(serv);
             db.SaveChanges();
-            return db.MailServices.OrderBy(d => d.Id).LastOrDefault();
+            return db.SmtpServers.OrderBy(d => d.Id).LastOrDefault();
         }
-        public void DeleteBdMailService(int id)
+        public void DeleteBdSmtpServer(int id)
         {
-            MailService ms = db.MailServices.FirstOrDefault(d => d.Id == id);
+            SmtpServer ms = db.SmtpServers.FirstOrDefault(d => d.Id == id);
             if (ms != null)
             {
-                db.MailServices.Remove(ms);
+                db.SmtpServers.Remove(ms);
                 db.SaveChanges();
             }
         }
-        public void UpdateBdMailService(MailService ms)
+        public void UpdateBdSmtpServer(SmtpServer serv)
         {
-            MailService msdb = db.MailServices.FirstOrDefault(d => d.Id == ms.Id);
-            if (msdb != null)
+            SmtpServer servdb = db.SmtpServers.FirstOrDefault(d => d.Id == serv.Id);
+            if (servdb != null)
             {
-                msdb.Title = ms.Title;
-                msdb.SmtpServer = ms.SmtpServer;
-                msdb.DomainName = ms.DomainName;
-                db.MailServices.Update(msdb);
+                servdb.Title = serv.Title;
+                servdb.SmtpServ = serv.SmtpServ;
+                servdb.Port = serv.Port;
+                servdb.UseSSL = serv.UseSSL;
+                db.SmtpServers.Update(servdb);
                 db.SaveChanges();
             }
 
-        }*/
+        }
+        public MessageSendContainer AddBdMessageSendContainer(MessageSendContainer msc)
+        {
+            db.MessageSendContainers.Add(msc);
+            db.SaveChanges();
+            return db.MessageSendContainers.OrderBy(d => d.Id).LastOrDefault();
+        }
+        public void DeleteBdMessageSendContainer(int id)
+        {
+            MessageSendContainer msc = db.MessageSendContainers.FirstOrDefault(d => d.Id == id);
+            if (msc != null)
+            {
+                db.MessageSendContainers.Remove(msc);
+                db.SaveChanges();
+            }
+        }
+        public void UpdateBdMessageSendContaine(MessageSendContainer msc)
+        {
+            MessageSendContainer mscdb = db.MessageSendContainers.FirstOrDefault(d => d.Id == msc.Id);
+            if (mscdb != null)
+            {
+                mscdb.SmtpServerUse = msc.SmtpServerUse;
+                mscdb.PortUse = msc.PortUse;
+                mscdb.SSLUse = msc.SSLUse;
+                mscdb.SmtpAccountEmailUse = msc.SmtpAccountEmailUse;
+                mscdb.SmtpAccountPasswordUse = msc.SmtpAccountPasswordUse;
+                mscdb.SmtpAccountPerson_CompanyUse = msc.SmtpAccountPerson_CompanyUse;
+                mscdb.EmailAddressesTo = msc.EmailAddressesTo;
+                mscdb.Subject = msc.Subject;
+                mscdb.Body = msc.Body;
+                mscdb.SendDate = msc.SendDate;
+                mscdb.Status = msc.Status;
+                db.MessageSendContainers.Update(mscdb);
+                db.SaveChanges();
+            }
+
+        }
     }
 }

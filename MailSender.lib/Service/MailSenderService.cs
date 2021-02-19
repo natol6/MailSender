@@ -22,7 +22,7 @@ namespace MailSender.lib.Service
             message.From.Add(new MailboxAddress(msc.SmtpAccountPerson_CompanyUse, 
                 msc.SmtpAccountEmailUse));
             InternetAddressList addresses = new InternetAddressList();
-            bool yes = InternetAddressList.TryParse(ParserOptions.Default , msc.EmailAddresses, out addresses);
+            bool yes = InternetAddressList.TryParse(ParserOptions.Default , msc.EmailAddressesTo, out addresses);
             if (!yes) return $"Не отправлено (не указаны адресаты) письмо: '{msc.Subject}'";
             message.To.AddRange(addresses);
             message.Subject = msc.Subject;

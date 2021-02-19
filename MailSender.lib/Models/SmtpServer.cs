@@ -42,16 +42,6 @@ namespace MailSender.lib.Models
                 OnPropertyChanged("SmtpServ");
             }
         }
-        //private string _DomainName;
-        //public string DomainName
-        //{
-            //get => _DomainName;
-            //set
-            //{
-                //_DomainName = value;
-                //OnPropertyChanged("DomainName");
-            //}
-        //}
         private int _Port;
         public int Port
         {
