@@ -6,8 +6,9 @@
         xmlns:fa="http://schemas.fontawesome.com/icons/"
         xmlns:local="clr-namespace:MailSender"
         xmlns:vm="clr-namespace:MailSender.ViewModels"
+        xmlns:cmd="clr-namespace:MailSender.Infrastructure.Commands"
         mc:Ignorable="d"
-        Title="Рассыльщик писем" Height="450" Width="800">
+        Title="{Binding Title}" Height="450" Width="800">
     <Window.DataContext>
         <vm:MailSenderViewModel/>
     </Window.DataContext>
@@ -16,7 +17,11 @@
             <MenuItem Header="Файл">
                 <MenuItem Header="Загрузить встроенную адресную книгу"/>
                 <Separator/>
-                <MenuItem Header="Выход"/>
+                <MenuItem Header="Выход">
+                    <MenuItem.Command>
+                        <cmd:CloseWindowCommand/>
+                    </MenuItem.Command>
+                </MenuItem>
             </MenuItem>
             <MenuItem Header="Справка">
                 <MenuItem Header="Помощь"/>

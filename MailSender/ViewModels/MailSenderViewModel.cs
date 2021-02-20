@@ -9,109 +9,76 @@ using System.ComponentModel;
 using System.Collections.ObjectModel;
 using System.Windows;
 using System.Runtime.CompilerServices;
+using MailSender.ViewModels.Base;
 
 namespace MailSender.ViewModels
 {
-    class MailSenderViewModel : INotifyPropertyChanged
+    class MailSenderViewModel : ViewModel
     {
-        public event PropertyChangedEventHandler PropertyChanged;
         public ObservableCollection<SmtpServer> SmtpServers { get; set; } = new ObservableCollection<SmtpServer>();
         public ObservableCollection<MessagePattern> MessagePatterns { get; set; } = new ObservableCollection<MessagePattern>();
         public ObservableCollection<EmailAddress> EmailAddresses { get; set; } = new ObservableCollection<EmailAddress>();
-
+        private string _Title = "Главное окно программы";
+        /// <summary>Заголовок окна</summary>
+        public string Title
+        {
+            get => _Title;
+            set => Set(ref _Title, value);
+        }
         private SmtpServer _SelectedSmtpServer;
         public SmtpServer SelectedSmtpServer
         {
             get => _SelectedSmtpServer;
-            set
-            {
-                _SelectedSmtpServer = value;
-                OnPropertyChanged("SelectedSmtpServer");
-            }
+            set => Set(ref _SelectedSmtpServer, value);
+            
         }
         private MessagePattern _SelectedMessagePattern;
         public MessagePattern SelectedMessagePattern
         {
             get => _SelectedMessagePattern;
-            set
-            {
-                _SelectedMessagePattern = value;
-                OnPropertyChanged("SelectedMessagePattern");
-            }
+            set => Set(ref _SelectedMessagePattern, value);
         }
         private EmailAddress _SelectedEmailAddress;
         public EmailAddress SelectedEmailAddress
         {
             get => _SelectedEmailAddress;
-            set
-            {
-                _SelectedEmailAddress = value;
-                OnPropertyChanged("SelectedEmailAddress");
-            }
+            set => Set(ref _SelectedEmailAddress, value);
         }
         private SmtpAccount _SelectedAccount;
         public SmtpAccount SelectedAccount
         {
             get => _SelectedAccount;
-            set
-            {
-                _SelectedAccount = value;
-                OnPropertyChanged("SelectedAccount");
-            }
+            set => Set(ref _SelectedAccount, value);
         }
         private MessageSendContainer _SelectedMessageSendConteiner;
         public MessageSendContainer SelectedMessageSendConteiner
         {
             get => _SelectedMessageSendConteiner;
-            set
-            {
-                _SelectedMessageSendConteiner = value;
-                OnPropertyChanged("SelectedMessageSendConteiner");
-            }
+            set => Set(ref _SelectedMessageSendConteiner, value);
         }
         private SmtpServer _SelectedSmtpServerForEmail;
         public SmtpServer SelectedSmtpServerForEmail
         {
             get => _SelectedSmtpServerForEmail;
-            set
-            {
-                _SelectedSmtpServerForEmail = value;
-                OnPropertyChanged("SelectedSmtpServerForEmail");
-            }
+            set => Set(ref _SelectedSmtpServerForEmail, value);
         }
         private MessagePattern _SelectedMessagePatternForEmail;
         public MessagePattern SelectedMessagePatternForEmail
         {
             get => _SelectedMessagePatternForEmail;
-            set
-            {
-                _SelectedMessagePatternForEmail = value;
-                OnPropertyChanged("SelectedMessagePatternForEmail");
-            }
+            set => Set(ref _SelectedMessagePatternForEmail, value);
         }
         private EmailAddress _SelectedEmailAddressForEmail;
         public EmailAddress SelectedEmailAddressForEmail
         {
             get => _SelectedEmailAddressForEmail;
-            set
-            {
-                _SelectedEmailAddressForEmail = value;
-                OnPropertyChanged("SelectedEmailAddressForEmail");
-            }
+            set => Set(ref _SelectedEmailAddressForEmail, value);
         }
         private SmtpAccount _SelectedAccountForEmail;
         public SmtpAccount SelectedAccountForEmail
         {
             get => _SelectedAccountForEmail;
-            set
-            {
-                _SelectedAccountForEmail = value;
-                OnPropertyChanged("SelectedAccountForEmail");
-            }
-        }
-        private void OnPropertyChanged([CallerMemberName] string prop = "")
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));
+            set => Set(ref _SelectedAccountForEmail, value);
         }
         public MailSenderViewModel()
         {
