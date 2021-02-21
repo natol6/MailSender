@@ -6,22 +6,22 @@
         xmlns:fa="http://schemas.fontawesome.com/icons/"
         xmlns:local="clr-namespace:MailSender"
         xmlns:vm="clr-namespace:MailSender.ViewModels"
-        xmlns:cmd="clr-namespace:MailSender.Infrastructure.Commands"
+        xmlns:cmd="clr-namespace:MailSender.lib.Commands;assembly=MailSender.lib"
+        xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         mc:Ignorable="d"
+        DataContext="{Binding MainWindowModel, Source={StaticResource Locator}}"
         Title="{Binding Title}" Height="450" Width="800">
-    <Window.DataContext>
-        <vm:MailSenderViewModel/>
-    </Window.DataContext>
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction Command="{Binding LoadDataCommand}"/>
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
     <DockPanel>
         <Menu DockPanel.Dock="Top">
             <MenuItem Header="Файл">
                 <MenuItem Header="Загрузить встроенную адресную книгу"/>
                 <Separator/>
-                <MenuItem Header="Выход">
-                    <MenuItem.Command>
-                        <cmd:CloseWindowCommand/>
-                    </MenuItem.Command>
-                </MenuItem>
+                <MenuItem Header="Выход" Command="{StaticResource CloseMainWindowCommand}"/>
             </MenuItem>
             <MenuItem Header="Справка">
                 <MenuItem Header="Помощь"/>

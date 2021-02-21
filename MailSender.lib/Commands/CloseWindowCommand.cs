@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using MailSender.Infrastructure.Commands.Base;
+using MailSender.lib.Commands.Base;
 using System.Windows;
 
-namespace MailSender.Infrastructure.Commands
+namespace MailSender.lib.Commands
 {
-    class CloseWindowCommand: Command
+    public class CloseWindowCommand: Command
     {
-        protected override void Execute(object p)
+        public override void Execute(object p)
         {
             var window = p as Window;
             if (window is null)

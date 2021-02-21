@@ -3,28 +3,53 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using MailSender.ViewModels.Base;
+using System.Collections.ObjectModel;
 using MailSender.lib.Service;
 using MailSender.lib.Models;
-using System.ComponentModel;
-using System.Collections.ObjectModel;
-using System.Windows;
-using System.Runtime.CompilerServices;
-using MailSender.ViewModels.Base;
+using MailSender.lib.Commands;
+using System.Windows.Input;
 
 namespace MailSender.ViewModels
 {
-    class MailSenderViewModel : ViewModel
+    class MainWindowViewModel: ViewModel
     {
-        public ObservableCollection<SmtpServer> SmtpServers { get; set; } = new ObservableCollection<SmtpServer>();
-        public ObservableCollection<MessagePattern> MessagePatterns { get; set; } = new ObservableCollection<MessagePattern>();
-        public ObservableCollection<EmailAddress> EmailAddresses { get; set; } = new ObservableCollection<EmailAddress>();
-        
+        private string _Title = "Рассыльщик почты";
+        public string Title
+        {
+            get => _Title;
+            set => Set(ref _Title, value);
+        }
+        private ObservableCollection<SmtpServer> _SmtpServers;
+        public ObservableCollection<SmtpServer> SmtpServers
+        {
+            get => _SmtpServers;
+            set => Set(ref _SmtpServers, value);
+        }
+        private ObservableCollection<MessagePattern> _MessagePatterns;
+        public ObservableCollection<MessagePattern> MessagePatterns
+        {
+            get => _MessagePatterns;
+            set => Set(ref _MessagePatterns, value);
+        }
+        private ObservableCollection<EmailAddress> _EmailAddresses;
+        public ObservableCollection<EmailAddress> EmailAddresses
+        {
+            get => _EmailAddresses;
+            set => Set(ref _EmailAddresses, value);
+        }
+        private ObservableCollection<MessageSendContainer> _MessageSendContainers;
+        public ObservableCollection<MessageSendContainer> MessageSendContainers
+        {
+            get => _MessageSendContainers;
+            set => Set(ref _MessageSendContainers, value);
+        }
         private SmtpServer _SelectedSmtpServer;
         public SmtpServer SelectedSmtpServer
         {
             get => _SelectedSmtpServer;
             set => Set(ref _SelectedSmtpServer, value);
-            
+
         }
         private MessagePattern _SelectedMessagePattern;
         public MessagePattern SelectedMessagePattern
@@ -74,9 +99,24 @@ namespace MailSender.ViewModels
             get => _SelectedAccountForEmail;
             set => Set(ref _SelectedAccountForEmail, value);
         }
-        public MailSenderViewModel()
+        
+        private readonly IDataBaseConnect _DbConnect;
+        public MainWindowViewModel(IDataBaseConnect DBMailSender)
         {
-            //LoadMailSet();
+            _DbConnect = DBMailSender;
         }
+        #region Commands
+        private ICommand _LoadDataCommand;
+        public ICommand LoadDataCommand => _LoadDataCommand ??= new LambdaCommand(OnLoadDataCommandExecuted);
+        private void OnLoadDataCommandExecuted(object p)
+        {
+            //var accounts = _DbConnect.DBGetSmtpAccounts();
+            SmtpServers = new ObservableCollection<SmtpServer>(_DbConnect.DBGetSmtpServers());
+            MessagePatterns = new ObservableCollection<MessagePattern>(_DbConnect.DBGetMessagePatterns());
+            EmailAddresses = new ObservableCollection<EmailAddress>(_DbConnect.DBGetEmailAddresses());
+            MessageSendContainers = new ObservableCollection<MessageSendContainer>(_DbConnect.DBGetMessageSendContainers());
+        }
+
+        #endregion
     }
 }
