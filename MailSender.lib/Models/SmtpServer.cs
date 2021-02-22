@@ -62,7 +62,16 @@ namespace MailSender.lib.Models
                 OnPropertyChanged("UseSSL");
             }
         } 
-        public ObservableCollection<SmtpAccount>  SmtpAccounts { get; set; } = new ObservableCollection<SmtpAccount>();
+        private ObservableCollection<SmtpAccount> _SmtpAccounts;
+        public ObservableCollection<SmtpAccount> SmtpAccounts
+        {
+            get => _SmtpAccounts;
+            set
+            {
+                _SmtpAccounts = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SmtpAccounts)));
+            }
+        } 
         private void OnPropertyChanged([CallerMemberName] string prop = "")
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));

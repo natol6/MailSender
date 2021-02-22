@@ -20,6 +20,9 @@ namespace MailSender.lib.Commands
         }
         public override bool CanExecute(object p) => _CanExecute?.Invoke(p) ??
        true;
-        public override void Execute(object p) => _Execute(p);
+        public override void Execute(object p) 
+        { 
+           if(CanExecute(p)) _Execute(p); 
+        }
     }
 }

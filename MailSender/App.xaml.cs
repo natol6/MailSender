@@ -9,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using MailSender.ViewModels;
 using MailSender.lib.Service;
+using MailSender.lib.Interfaces;
 
 namespace MailSender
 {

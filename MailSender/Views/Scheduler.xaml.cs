@@ -13,17 +13,16 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace MailSender
+namespace MailSender.Views
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// Логика взаимодействия для Scheduler.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class Scheduler : UserControl
     {
-        public MainWindow()
+        public Scheduler()
         {
             InitializeComponent();
         }
-
     }
 }

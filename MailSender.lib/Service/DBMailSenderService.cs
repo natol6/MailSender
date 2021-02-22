@@ -7,24 +7,10 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.EntityFrameworkCore;
 using MailSender.lib.Models;
 using MailSender.lib.Data;
+using MailSender.lib.Interfaces;
 
 namespace MailSender.lib.Service
 {
-    public interface IDatabaseTable<T>
-    {
-        public T AddDb(T obj);
-        public void UpdateDb(T obj);
-        public void DeleteDb(T obj);
-    }
-    public interface IDataBaseConnect: IDatabaseTable<SmtpAccount>, IDatabaseTable<SmtpServer>, IDatabaseTable<MessagePattern>
-        , IDatabaseTable<EmailAddress>, IDatabaseTable<MessageSendContainer> 
-    {
-        public IEnumerable<SmtpAccount> DBGetSmtpAccounts();
-        public IEnumerable<SmtpServer> DBGetSmtpServers();
-        public IEnumerable<MessagePattern> DBGetMessagePatterns();
-        public IEnumerable<EmailAddress> DBGetEmailAddresses();
-        public IEnumerable<MessageSendContainer> DBGetMessageSendContainers();
-    }
     public class DBMailSenderService : IDataBaseConnect
     {
         public static IConfiguration Configuration { get; } = new ConfigurationBuilder()
@@ -37,17 +23,6 @@ namespace MailSender.lib.Service
         {
             db.Database.EnsureCreated();
         }
-        /*public IEnumerable<List<object>> DBGet()
-        {
-            List<object> dbTables = new List<object>();
-            dbTables.Add(db.SmtpAccounts.ToArray());
-            dbTables.Add(db.SmtpServers.ToArray());
-            dbTables.Add(db.MessagePatterns.ToArray());
-            dbTables.Add(db.EmailAddresses.ToArray());
-            dbTables.Add(db.MessageSendContainers.ToArray());
-            Ienumerable<List<object>> db = dbTables.ToArray();
-            return db;
-        }*/
         public IEnumerable<SmtpAccount> DBGetSmtpAccounts() => db.SmtpAccounts.ToArray();
 
         public IEnumerable<SmtpServer> DBGetSmtpServers() => db.SmtpServers.ToArray();
