@@ -112,8 +112,8 @@ namespace MailSender.lib.Models
                 OnPropertyChanged("Body");
             }
         }
-        private DateTime _SendDate;
-        public DateTime SendDate
+        private DateTime? _SendDate;
+        public DateTime? SendDate
         {
             get => _SendDate;
             set

@@ -11,7 +11,7 @@ using MailSender.lib.Interfaces;
 
 namespace MailSender.lib.Service
 {
-    public class DBMailSenderService : IDataBaseConnect
+    public class DBMailSenderService : IDataBaseMailSender
     {
         public static IConfiguration Configuration { get; } = new ConfigurationBuilder()
             .AddJsonFile("appsettings.json", false, true)

@@ -10,10 +10,10 @@ namespace MailSender.ViewModels
 {
     internal class ViewModelLocator
     {
-        public DBMailSenderService DBMailSender => App.Services
-            .GetRequiredService<DBMailSenderService>();
+        
         public MainWindowViewModel MainWindowModel => App.Services
             .GetRequiredService<MainWindowViewModel>();
-        
+        public DBMailSenderService DBMailSender => App.Services
+            .GetRequiredService<DBMailSenderService>();
     }
 }

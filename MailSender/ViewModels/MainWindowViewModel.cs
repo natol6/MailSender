@@ -9,6 +9,7 @@ using MailSender.lib.Service;
 using MailSender.lib.Models;
 using MailSender.lib.Commands;
 using MailSender.lib.Interfaces;
+using MailSender.interfaces;
 using System.Windows.Input;
 
 namespace MailSender.ViewModels
@@ -88,11 +89,29 @@ namespace MailSender.ViewModels
             get => _SelectedMessagePatternForEmail;
             set => Set(ref _SelectedMessagePatternForEmail, value);
         }
-        private string _SelectedEmailAddressForEmail;
-        public string SelectedEmailAddressForEmail
+        private string _SubjectForEmail;
+        public string SubjectForEmail
+        {
+            get => _SubjectForEmail;
+            set => Set(ref _SubjectForEmail, value);
+        }
+        private string _BodyForEmail;
+        public string BodyForEmail
+        {
+            get => _BodyForEmail;
+            set => Set(ref _BodyForEmail, value);
+        }
+        private EmailAddress _SelectedEmailAddressForEmail;
+        public EmailAddress SelectedEmailAddressForEmail
         {
             get => _SelectedEmailAddressForEmail;
             set => Set(ref _SelectedEmailAddressForEmail, value);
+        }
+        private string _EmailAddressesForEmail;
+        public string EmailAddressesForEmail
+        {
+            get => _EmailAddressesForEmail;
+            set => Set(ref _EmailAddressesForEmail, value);
         }
         private SmtpAccount _SelectedSmtpAccountForEmail;
         public SmtpAccount SelectedSmtpAccountForEmail
@@ -100,16 +119,23 @@ namespace MailSender.ViewModels
             get => _SelectedSmtpAccountForEmail;
             set => Set(ref _SelectedSmtpAccountForEmail, value);
         }
-        private DateTime _SelectedDateTimeForEmail;
-        public DateTime SelectedDateTimeForEmail
+        private DateTime? _SelectedTimeForEmail;
+        public DateTime? SelectedTimeForEmail
+        {
+            get => _SelectedTimeForEmail;
+            set => Set(ref _SelectedTimeForEmail, value);
+        }
+        private DateTime? _SelectedDateTimeForEmail;
+        public DateTime? SelectedDateTimeForEmail
         {
             get => _SelectedDateTimeForEmail;
             set => Set(ref _SelectedDateTimeForEmail, value);
         }
-        private readonly IDataBaseConnect _DbConnect;
-        public MainWindowViewModel(IDataBaseConnect DBMailSender)
+        private readonly IDataBaseMailSender _DbConnect;
+        public MainWindowViewModel(IDataBaseMailSender DBMailSender)
         {
             _DbConnect = DBMailSender;
+            
         }
 
         #region Commands for database connect servise
@@ -117,7 +143,7 @@ namespace MailSender.ViewModels
         public ICommand LoadDataCommand => _LoadDataCommand ??= new LambdaCommand(OnLoadDataCommandExecuted);
         private void OnLoadDataCommandExecuted(object p)
         {
-            //var accounts = _DbConnect.DBGetSmtpAccounts();
+            var accounts = _DbConnect.DBGetSmtpAccounts();
             SmtpServers = new ObservableCollection<SmtpServer>(_DbConnect.DBGetSmtpServers());
             MessagePatterns = new ObservableCollection<MessagePattern>(_DbConnect.DBGetMessagePatterns());
             EmailAddresses = new ObservableCollection<EmailAddress>(_DbConnect.DBGetEmailAddresses());
@@ -192,6 +218,7 @@ namespace MailSender.ViewModels
             SelectedSmtpServer = null;
             SmtpServers.Add(_DbConnect.AddDb(new SmtpServer { Title = "New SmtpServer" }));
             SelectedSmtpServer = SmtpServers.OrderBy(t => t.Id).LastOrDefault();
+            SelectedSmtpServer.SmtpAccounts = new ObservableCollection<SmtpAccount>();
 
         }
         private ICommand _DeleteSmtpServer;
@@ -230,7 +257,8 @@ namespace MailSender.ViewModels
         private void OnAddSmtpAccountExecuted(object p)
         {
             SelectedSmtpAccount = null;
-            SelectedSmtpServer.SmtpAccounts.Add(_DbConnect.AddDb(new SmtpAccount { AccountEmail = "login@domainname.com", SmtpServerId = SelectedSmtpServer.Id }));
+            SmtpAccount newAccount = _DbConnect.AddDb(new SmtpAccount { AccountEmail = "login@domainname.com", SmtpServerId = SelectedSmtpServer.Id });
+            //SelectedSmtpServer.SmtpAccounts.Add(newAccount);
             SelectedSmtpAccount = SelectedSmtpServer.SmtpAccounts.OrderBy(t => t.Id).LastOrDefault();
 
         }
@@ -263,7 +291,9 @@ namespace MailSender.ViewModels
             return SelectedSmtpAccountForEmail != null &&
                 SelectedSmtpServerForEmail != null &&
                 SelectedEmailAddressForEmail != null &&
-                SelectedMessagePatternForEmail != null;
+                SelectedMessagePatternForEmail != null &&
+                SelectedDateTimeForEmail != null &&
+                SelectedTimeForEmail != null;
         }
         private void OnAddMessageSendContainerExecuted(object p)
         {
@@ -274,7 +304,7 @@ namespace MailSender.ViewModels
                 SmtpAccountEmailUse = SelectedSmtpAccountForEmail.AccountEmail,
                 SmtpAccountPasswordUse = SelectedSmtpAccountForEmail.Password,
                 SmtpAccountPerson_CompanyUse = SelectedSmtpAccountForEmail.Person_Company,
-                EmailAddressesTo = SelectedEmailAddressForEmail,
+                EmailAddressesTo = EmailAddressesForEmail,
                 Subject = SelectedMessagePatternForEmail.Subject,
                 Body = SelectedMessagePatternForEmail.Body,
                 SendDate = SelectedDateTimeForEmail,
@@ -303,6 +333,46 @@ namespace MailSender.ViewModels
         private void OnUpdateMessageSendContainerExecuted(object p)
         {
             _DbConnect.UpdateDb(SelectedMessageSendContainer);
+        }
+        #endregion
+
+        #region Commands for scheduler
+        private ICommand _AddEmailAddressToMessage;
+        public ICommand AddEmailAddressToMessage => _AddEmailAddressToMessage ??= new LambdaCommand(OnAddEmailAddressToMessageExecuted, CanAddEmailAddressToMessageExecuted);
+        private bool CanAddEmailAddressToMessageExecuted(object p)
+        {
+            return SelectedEmailAddressForEmail != null;
+        }
+        private void OnAddEmailAddressToMessageExecuted(object p)
+        {
+            EmailAddressesForEmail += $"{SelectedEmailAddressForEmail.Person_Company}<{SelectedEmailAddressForEmail.Email}>; ";
+            SelectedEmailAddressForEmail = null;
+        }
+        private ICommand _AddCorrectMessagePattern;
+        public ICommand AddCorrectMessagePattern => _AddCorrectMessagePattern ??= new LambdaCommand(OnAddCorrectMessagePatternExecuted, CanAddCorrectMessagePatternExecuted);
+        private bool CanAddCorrectMessagePatternExecuted(object p)
+        {
+            return SubjectForEmail != null &&
+                BodyForEmail != null &&
+                MessagePatterns.Where(m => m.Subject == SubjectForEmail).Count() == 0 &&
+                MessagePatterns.Where(m => m.Body == BodyForEmail).Count() == 0;
+        }
+        private void OnAddCorrectMessagePatternExecuted(object p)
+        {
+            MessagePatterns.Add(_DbConnect.AddDb(new MessagePattern { Subject = SubjectForEmail
+                , Body = BodyForEmail})) ;
+            
+        }
+        private ICommand _AddSubjectBodyForEmail;
+        public ICommand AddSubjectBodyForEmail => _AddSubjectBodyForEmail ??= new LambdaCommand(OnAddSubjectBodyForEmailExecuted, CanAddSubjectBodyForEmailExecuted);
+        private bool CanAddSubjectBodyForEmailExecuted(object p)
+        {
+            return SelectedMessagePatternForEmail != null;
+        }
+        private void OnAddSubjectBodyForEmailExecuted(object p)
+        {
+            SubjectForEmail = SelectedMessagePatternForEmail.Subject;
+            BodyForEmail = SelectedMessagePatternForEmail.Body;
         }
         #endregion
     }

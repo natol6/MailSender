@@ -4,16 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using MailSender.lib.Models;
+using MailSender.lib.Interfaces.Base;
 
 namespace MailSender.lib.Interfaces
 {
-    public interface IDatabaseTable<T>
-    {
-        public T AddDb(T obj);
-        public void UpdateDb(T obj);
-        public void DeleteDb(T obj);
-    }
-    public interface IDataBaseConnect : IDatabaseTable<SmtpAccount>, IDatabaseTable<SmtpServer>, IDatabaseTable<MessagePattern>
+    public interface IDataBaseMailSender : IDatabaseTable<SmtpAccount>, IDatabaseTable<SmtpServer>, IDatabaseTable<MessagePattern>
         , IDatabaseTable<EmailAddress>, IDatabaseTable<MessageSendContainer>
     {
         public IEnumerable<SmtpAccount> DBGetSmtpAccounts();

@@ -10,6 +10,7 @@ using Microsoft.Extensions.Hosting;
 using MailSender.ViewModels;
 using MailSender.lib.Service;
 using MailSender.lib.Interfaces;
+using MailSender.interfaces;
 
 namespace MailSender
 {
@@ -36,11 +37,12 @@ namespace MailSender
             IServiceCollection services)
         {
             services.AddSingleton<MainWindowViewModel>();
-            services.AddSingleton<IDataBaseConnect, DBMailSenderService>();
+            services.AddSingleton<IDataBaseMailSender, DBMailSenderService>();
             // Здесь нам надо добавить все сервисы нашего приложения
             // в коллекцию services
             // В переменной host хранится информация, на пример,
             // о пути запуска нашего приложения
+            
         }
 
     }
