@@ -13,7 +13,7 @@ namespace MailSender.ViewModels
         
         public MainWindowViewModel MainWindowModel => App.Services
             .GetRequiredService<MainWindowViewModel>();
-        public DBMailSenderService DBMailSender => App.Services
-            .GetRequiredService<DBMailSenderService>();
+        //public MailSenderService MailSender => App.Services
+             //.GetRequiredService<MailSenderService>();
     }
 }

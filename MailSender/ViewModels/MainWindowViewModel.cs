@@ -11,6 +11,7 @@ using MailSender.lib.Commands;
 using MailSender.lib.Interfaces;
 using MailSender.interfaces;
 using System.Windows.Input;
+using System.Security;
 
 namespace MailSender.ViewModels
 {
@@ -70,6 +71,12 @@ namespace MailSender.ViewModels
         {
             get => _SelectedSmtpAccount;
             set => Set(ref _SelectedSmtpAccount, value);
+        }
+        private SecureString _SelectedPassword;
+        public SecureString SelectedPassword
+        {
+            get => _SelectedPassword;
+            set => Set(ref _SelectedPassword, value);
         }
         private MessageSendContainer _SelectedMessageSendContainer;
         public MessageSendContainer SelectedMessageSendContainer
@@ -132,10 +139,13 @@ namespace MailSender.ViewModels
             set => Set(ref _SelectedDateTimeForEmail, value);
         }
         private readonly IDataBaseMailSender _DbConnect;
-        public MainWindowViewModel(IDataBaseMailSender DBMailSender)
+        private readonly ITextEncoder _TextEncoder;
+        private readonly IMailsender _MailSender;
+        public MainWindowViewModel(IDataBaseMailSender DBMailSender, ITextEncoder textEncoder, IMailsender mailsender)
         {
             _DbConnect = DBMailSender;
-            
+            _TextEncoder = textEncoder;
+            _MailSender = mailsender;
         }
 
         #region Commands for database connect servise
@@ -257,9 +267,10 @@ namespace MailSender.ViewModels
         private void OnAddSmtpAccountExecuted(object p)
         {
             SelectedSmtpAccount = null;
-            SmtpAccount newAccount = _DbConnect.AddDb(new SmtpAccount { AccountEmail = "login@domainname.com", SmtpServerId = SelectedSmtpServer.Id });
+            SmtpAccount newAccount = _DbConnect.AddDb(new SmtpAccount { AccountEmail = "login@domainname.com", Password="********", SmtpServerId = SelectedSmtpServer.Id });
             //SelectedSmtpServer.SmtpAccounts.Add(newAccount);
             SelectedSmtpAccount = SelectedSmtpServer.SmtpAccounts.OrderBy(t => t.Id).LastOrDefault();
+            SelectedPassword = _TextEncoder.DecodeSecure(SelectedSmtpAccount.Password);
 
         }
         private ICommand _DeleteSmtpAccount;
@@ -282,7 +293,9 @@ namespace MailSender.ViewModels
         }
         private void OnUpdateSmtpAccountExecuted(object p)
         {
+            SelectedSmtpAccount.Password = _TextEncoder.Encode(SelectedPassword);
             _DbConnect.UpdateDb(SelectedSmtpAccount);
+            SelectedPassword = null;
         }
         private ICommand _AddMessageSendContainer;
         public ICommand AddMessageSendContainer => _AddMessageSendContainer ??= new LambdaCommand(OnAddMessageSendContainerExecuted, CanAddMessageSendContainerExecuted);

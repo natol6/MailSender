@@ -8,15 +8,21 @@ using System.Security;
 using MailKit.Net.Smtp;
 using MailKit;
 using MimeKit;
+using MailSender.lib.Interfaces;
 
 
 
 
 namespace MailSender.lib.Service
 {
-    public static class MailSenderService
+    public class MailSenderService : IMailsender
     {
-        public static string SendMessage(MessageSendContainer msc)
+        private readonly ITextEncoder _TextEncoder;
+        public MailSenderService(ITextEncoder textEnc)
+        {
+            _TextEncoder = textEnc;
+        }
+        public string SendMessage(MessageSendContainer msc)
         {
             var message = new MimeMessage();
             message.From.Add(new MailboxAddress(msc.SmtpAccountPerson_CompanyUse, 
@@ -29,7 +35,7 @@ namespace MailSender.lib.Service
             message.Body = new TextPart("plain") { Text = msc.Body };
             using var client = new SmtpClient();
             client.Connect(msc.SmtpServerUse, msc.PortUse, msc.SSLUse);
-            client.Authenticate(msc.SmtpAccountEmailUse, TextEncoder.Decode(msc.SmtpAccountPasswordUse));
+            client.Authenticate(msc.SmtpAccountEmailUse, _TextEncoder.Decode(msc.SmtpAccountPasswordUse));
             try
             {
                 client.Send(message);
