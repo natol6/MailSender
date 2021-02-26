@@ -10,5 +10,20 @@
         <vm:ViewModelLocator x:Key="Locator"/>
         <commands:CloseWindowCommand x:Key="CloseMainWindowCommand"/>
         <fa:ImageAwesome x:Key="Image"/>
+        <Style TargetType="TextBox">
+            <Setter Property="Validation.ErrorTemplate">
+                <Setter.Value>
+                    <ControlTemplate>
+                        <DockPanel>
+                            <TextBlock Text="!" DockPanel.Dock="Right" FontWeight="Bold" Foreground="Red"
+                                                   FontSize="20"  VerticalAlignment="Center" Margin="3,0,0,0"/>
+                            <Border Padding="2" BorderBrush="Red" BorderThickness="3" CornerRadius="3">
+                                <AdornedElementPlaceholder/>
+                            </Border>
+                        </DockPanel>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
     </Application.Resources>
 </Application>

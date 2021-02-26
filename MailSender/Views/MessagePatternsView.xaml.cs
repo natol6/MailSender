@@ -24,5 +24,29 @@ namespace MailSender.Views
         {
             InitializeComponent();
         }
+
+        private void Body_Error(object sender, ValidationErrorEventArgs e)
+        {
+            if (e.Action == ValidationErrorEventAction.Added)
+            {
+                ((Control)sender).ToolTip = e.Error.ErrorContent.ToString();
+            }
+            else
+            {
+                ((Control)sender).ClearValue(ToolTipProperty);
+            }
+        }
+
+        private void Subject_Error(object sender, ValidationErrorEventArgs e)
+        {
+            if (e.Action == ValidationErrorEventAction.Added)
+            {
+                ((Control)sender).ToolTip = e.Error.ErrorContent.ToString();
+            }
+            else
+            {
+                ((Control)sender).ClearValue(ToolTipProperty);
+            }
+        }
     }
 }

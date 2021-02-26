@@ -24,5 +24,77 @@ namespace MailSender.Views
         {
             InitializeComponent();
         }
+
+        private void Title_Error(object sender, ValidationErrorEventArgs e)
+        {
+            if (e.Action == ValidationErrorEventAction.Added)
+            {
+                ((Control)sender).ToolTip = e.Error.ErrorContent.ToString();
+            }
+            else
+            {
+                ((Control)sender).ClearValue(ToolTipProperty);
+            }
+        }
+
+        private void Password_Error(object sender, ValidationErrorEventArgs e)
+        {
+            if (e.Action == ValidationErrorEventAction.Added)
+            {
+                ((Control)sender).ToolTip = e.Error.ErrorContent.ToString();
+            }
+            else
+            {
+                ((Control)sender).ClearValue(ToolTipProperty);
+            }
+        }
+
+        private void Person_Company_Error(object sender, ValidationErrorEventArgs e)
+        {
+            if (e.Action == ValidationErrorEventAction.Added)
+            {
+                ((Control)sender).ToolTip = e.Error.ErrorContent.ToString();
+            }
+            else
+            {
+                ((Control)sender).ClearValue(ToolTipProperty);
+            }
+        }
+
+        private void Port_Error(object sender, ValidationErrorEventArgs e)
+        {
+            if (e.Action == ValidationErrorEventAction.Added)
+            {
+                ((Control)sender).ToolTip = e.Error.ErrorContent.ToString();
+            }
+            else
+            {
+                ((Control)sender).ClearValue(ToolTipProperty);
+            }
+        }
+
+        private void AccountEmail_Error(object sender, ValidationErrorEventArgs e)
+        {
+            if (e.Action == ValidationErrorEventAction.Added)
+            {
+                ((Control)sender).ToolTip = e.Error.ErrorContent.ToString();
+            }
+            else
+            {
+                ((Control)sender).ClearValue(ToolTipProperty);
+            }
+        }
+
+        private void SmtpServer_Error(object sender, ValidationErrorEventArgs e)
+        {
+            if (e.Action == ValidationErrorEventAction.Added)
+            {
+                ((Control)sender).ToolTip = e.Error.ErrorContent.ToString();
+            }
+            else
+            {
+                ((Control)sender).ClearValue(ToolTipProperty);
+            }
+        }
     }
 }

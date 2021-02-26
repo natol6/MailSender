@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MailSender.Views"
+             xmlns:vr="clr-namespace:MailSender.Infrastructutre.ValidationRules"
              xmlns:fa="http://schemas.fontawesome.com/icons/"
              mc:Ignorable="d" 
              DataContext="{Binding MainWindowModel, Source={StaticResource Locator}}"
@@ -67,15 +68,48 @@
                     <StackPanel Margin="3">
                         <StackPanel Orientation="Horizontal" Margin="5">
                             <TextBlock Text="Наименование" Width="90"/>
-                            <TextBox Width="200" Text="{Binding SelectedSmtpServer.Title}"/>
+                            <TextBox Width="200" Name="Title" Validation.Error="Title_Error">
+                                <TextBox.Text>
+                                    <Binding Path="SelectedSmtpServer.Title" NotifyOnValidationError="True" UpdateSourceTrigger="PropertyChanged">
+                                        <Binding.ValidationRules>
+                                            <vr:ValidationString MinLen="2"/>
+                                            <ExceptionValidationRule/>
+                                            <DataErrorValidationRule/>
+                                            <NotifyDataErrorValidationRule/>
+                                        </Binding.ValidationRules>
+                                    </Binding>
+                                </TextBox.Text>
+                            </TextBox>
                         </StackPanel>
                         <StackPanel Orientation="Horizontal" Margin="5">
                             <TextBlock Text="SMTP-сервер" Width="90"/>
-                            <TextBox Width="200" Text="{Binding SelectedSmtpServer.SmtpServ}"/>
+                            <TextBox Width="200" Name="SmtpServer" Validation.Error="SmtpServer_Error">
+                                <TextBox.Text>
+                                    <Binding Path="SelectedSmtpServer.SmtpServ" NotifyOnValidationError="True" UpdateSourceTrigger="PropertyChanged">
+                                        <Binding.ValidationRules>
+                                            <vr:RegExValidation Pattern="smtp\.(\w+\.)+[A-Za-z]+" ErrorMessage="Неверный формат наименования SMTP-сервера"/>
+                                            <ExceptionValidationRule/>
+                                            <DataErrorValidationRule/>
+                                            <NotifyDataErrorValidationRule/>
+                                        </Binding.ValidationRules>
+                                    </Binding>
+                                </TextBox.Text>
+                            </TextBox>
                         </StackPanel>
                         <StackPanel Orientation="Horizontal" Margin="5">
                             <TextBlock Text="Порт" Width="90"/>
-                            <TextBox Width="200" Text="{Binding SelectedSmtpServer.Port}"/>
+                            <TextBox Width="200" Name="Port" Validation.Error="Port_Error">
+                                <TextBox.Text>
+                                    <Binding Path="SelectedSmtpServer.Port" NotifyOnValidationError="True" UpdateSourceTrigger="PropertyChanged">
+                                        <Binding.ValidationRules>
+                                            <vr:ValidationInt MinValue="25" MaxValue="587"/>
+                                            <ExceptionValidationRule/>
+                                            <DataErrorValidationRule/>
+                                            <NotifyDataErrorValidationRule/>
+                                        </Binding.ValidationRules>
+                                    </Binding>
+                                </TextBox.Text>
+                            </TextBox>
                         </StackPanel>
                         <StackPanel Orientation="Horizontal" Margin="5">
                             <CheckBox x:Name="SSLUse" IsChecked="{Binding SelectedSmtpServer.UseSSL}" Height="20" Content="Использовать безопасное соединение SSL"/>
@@ -97,15 +131,48 @@
                         <StackPanel Margin="3">
                             <StackPanel Orientation="Horizontal" Margin="5">
                                 <TextBlock Text="Адрес эл. почты" Width="90"/>
-                                <TextBox Width="200" Text="{Binding SelectedSmtpAccount.AccountEmail}"/>
+                                <TextBox Width="200" Name="AccountEmail" Validation.Error="AccountEmail_Error">
+                                    <TextBox.Text>
+                                        <Binding Path="SelectedSmtpAccount.AccountEmail" NotifyOnValidationError="True" UpdateSourceTrigger="PropertyChanged">
+                                            <Binding.ValidationRules>
+                                                <vr:RegExValidation Pattern="(\w+\.)*\w+@(\w+\.)+[A-Za-z]+" ErrorMessage="Неверный формат адреса электронной почты"/>
+                                                <ExceptionValidationRule/>
+                                                <DataErrorValidationRule/>
+                                                <NotifyDataErrorValidationRule/>
+                                            </Binding.ValidationRules>
+                                        </Binding>
+                                    </TextBox.Text>
+                                </TextBox>
                             </StackPanel>
                             <StackPanel Orientation="Horizontal" Margin="5">
                                 <TextBlock Text="Пароль" Width="90"/>
-                                <TextBox Width="200" Text="{Binding SelectedPassword}"/>
+                                <TextBox Width="200" Name="Password" Validation.Error="Password_Error">
+                                    <TextBox.Text>
+                                        <Binding Path="SelectedPassword" NotifyOnValidationError="True" UpdateSourceTrigger="PropertyChanged">
+                                            <Binding.ValidationRules>
+                                                <vr:ValidationString MinLen="2"/>
+                                                <ExceptionValidationRule/>
+                                                <DataErrorValidationRule/>
+                                                <NotifyDataErrorValidationRule/>
+                                            </Binding.ValidationRules>
+                                        </Binding>
+                                    </TextBox.Text>
+                                </TextBox>
                             </StackPanel>
                             <StackPanel Orientation="Horizontal" Margin="5">
                                 <TextBlock Text="Владелец" Width="90"/>
-                                <TextBox Width="200" Text="{Binding SelectedSmtpAccount.Person_Company}"/>
+                                <TextBox Width="200" Name="Person_Company" Validation.Error="Person_Company_Error">
+                                    <TextBox.Text>
+                                        <Binding Path="SelectedSmtpAccount.Person_Company" NotifyOnValidationError="True" UpdateSourceTrigger="PropertyChanged">
+                                            <Binding.ValidationRules>
+                                                <vr:ValidationString MinLen="2"/>
+                                                <ExceptionValidationRule/>
+                                                <DataErrorValidationRule/>
+                                                <NotifyDataErrorValidationRule/>
+                                            </Binding.ValidationRules>
+                                        </Binding>
+                                    </TextBox.Text>
+                                </TextBox>
                             </StackPanel>
                         </StackPanel>
                     </DockPanel>

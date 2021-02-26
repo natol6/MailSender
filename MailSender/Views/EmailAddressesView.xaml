@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MailSender.Views"
+             xmlns:vr="clr-namespace:MailSender.Infrastructutre.ValidationRules"
              xmlns:fa="http://schemas.fontawesome.com/icons/"
              DataContext="{Binding MainWindowModel, Source={StaticResource Locator}}"
              mc:Ignorable="d" 
@@ -34,7 +35,8 @@
                                         GridLinesVisibility="Vertical"
                                         VerticalGridLinesBrush="DarkGray"
                                         AlternatingRowBackground="#330000FF"
-                                        ItemsSource="{Binding EmailAddresses}">
+                                        ItemsSource="{Binding EmailAddresses}"
+                                        SelectedItem="{Binding SelectedEmailAddress}">
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="Адресат" Binding="{Binding Path=Person_Company}" Width="*"/>
                         <DataGridTextColumn Header="Email" Binding="{Binding Path=Email}" MinWidth="170"/>
@@ -59,11 +61,33 @@
                 <StackPanel Margin="10,10,10,10">
                     <StackPanel Orientation="Horizontal" Margin="5">
                         <TextBlock Text="Адресат" Width="90"/>
-                        <TextBox Width="250"  Text="{Binding SelectedEmailAddress.Person_Company}"/>
+                        <TextBox Width="250" Name="Person_Company" Validation.Error="Person_Company_Error">
+                            <TextBox.Text>
+                                <Binding Path="SelectedEmailAddress.Person_Company" NotifyOnValidationError="True" UpdateSourceTrigger="PropertyChanged">
+                                    <Binding.ValidationRules>
+                                        <vr:ValidationString MinLen="2" MaxLen="40"/>
+                                        <ExceptionValidationRule/>
+                                        <DataErrorValidationRule/>
+                                        <NotifyDataErrorValidationRule/>
+                                    </Binding.ValidationRules>
+                                </Binding>
+                            </TextBox.Text>
+                        </TextBox>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal" Margin="5">
                         <TextBlock Text="Email" Width="90"/>
-                        <TextBox Width="250" Text="{Binding SelectedEmailAddress.Email}"/>
+                        <TextBox Width="250" Name="Email" Validation.Error="Email_Error">
+                            <TextBox.Text>
+                                <Binding Path="SelectedEmailAddress.Email" NotifyOnValidationError="True" UpdateSourceTrigger="PropertyChanged">
+                                    <Binding.ValidationRules>
+                                        <vr:RegExValidation Pattern="(\w+\.)*\w+@(\w+\.)+[A-Za-z]+" ErrorMessage="Неверный формат адреса электронной почты"/>
+                                        <ExceptionValidationRule/>
+                                        <DataErrorValidationRule/>
+                                        <NotifyDataErrorValidationRule/>
+                                    </Binding.ValidationRules>
+                                </Binding>
+                            </TextBox.Text>
+                        </TextBox>
                     </StackPanel>
                 </StackPanel>
             </DockPanel>

@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MailSender.Views"
+             xmlns:vr="clr-namespace:MailSender.Infrastructutre.ValidationRules"
              xmlns:fa="http://schemas.fontawesome.com/icons/"
              mc:Ignorable="d" 
              DataContext="{Binding MainWindowModel, Source={StaticResource Locator}}"
@@ -35,7 +36,18 @@
         <GroupBox Grid.Column="1" Header="Выбранный шаблон письма">
             <DockPanel>
                 <GroupBox Header="Заголовок" DockPanel.Dock="Top" Margin="3">
-                    <TextBox  Text="{Binding SelectedMessagePattern.Subject}" Margin="5"/>
+                    <TextBox Margin="5" Name="Subject" Validation.Error="Subject_Error">
+                        <TextBox.Text>
+                            <Binding Path="SelectedMessagePattern.Subject" NotifyOnValidationError="True" UpdateSourceTrigger="PropertyChanged">
+                                <Binding.ValidationRules>
+                                    <vr:ValidationString MinLen="2"/>
+                                    <ExceptionValidationRule/>
+                                    <DataErrorValidationRule/>
+                                    <NotifyDataErrorValidationRule/>
+                                </Binding.ValidationRules>
+                            </Binding>
+                        </TextBox.Text>
+                    </TextBox>
                 </GroupBox>
                 <Grid DockPanel.Dock="Bottom" Margin="2">
                     <Button Name="SaveMessagePattern" Margin="10,5" ToolTip="Сохранить изменения в БД" HorizontalAlignment="Right" Command="{Binding UpdateMessagePattern}">
@@ -50,7 +62,18 @@
                     </Button>
                 </Grid>
                 <GroupBox Header="Текст" Margin="3">
-                    <TextBox Text="{Binding SelectedMessagePattern.Body}" Margin="5"/>
+                    <TextBox Margin="5" Name="Body" Validation.Error="Body_Error">
+                        <TextBox.Text>
+                            <Binding Path="SelectedMessagePattern.Body" NotifyOnValidationError="True" UpdateSourceTrigger="PropertyChanged">
+                                <Binding.ValidationRules>
+                                    <vr:ValidationString MinLen="2"/>
+                                    <ExceptionValidationRule/>
+                                    <DataErrorValidationRule/>
+                                    <NotifyDataErrorValidationRule/>
+                                </Binding.ValidationRules>
+                            </Binding>
+                        </TextBox.Text>
+                    </TextBox>
                 </GroupBox>
 
             </DockPanel>
