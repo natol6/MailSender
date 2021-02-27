@@ -17,11 +17,11 @@ namespace MailSender.lib.Service
         }
         public string Decode(string str, int key = 1)
         {
-            return new(str.Select(c => (char)(c + key)).ToArray());
+            return new(str.Select(c => (char)(c - key)).ToArray());
         }
         public SecureString DecodeSecure(string str, int key = 1)
         {
-            using SecureString sstr = new SecureString();
+            SecureString sstr = new SecureString();
             sstr.Clear();
             foreach(char c in str)
             {
