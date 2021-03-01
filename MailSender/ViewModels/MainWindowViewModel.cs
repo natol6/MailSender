@@ -17,7 +17,7 @@ using System.ComponentModel;
 
 namespace MailSender.ViewModels
 {
-    class MainWindowViewModel: ViewModel
+    class MainWindowViewModel : ViewModel
     {
         private string _Title = "Рассыльщик почты";
         public string Title
@@ -169,7 +169,7 @@ namespace MailSender.ViewModels
             if (e.PropertyName == nameof(SelectedSmtpServer))
             {
                 SelectedSmtpAccount = null;
-                
+
             }
         }
         #region Commands for database connect servise
@@ -192,9 +192,11 @@ namespace MailSender.ViewModels
         private void OnAddMessagePatternExecuted(object p)
         {
             SelectedMessagePattern = null;
-            MessagePatterns.Add(_DbConnect.AddDb(new MessagePattern { 
-                Subject = "Новая тема", 
-                Body = "Введите текст письма..." }));
+            MessagePatterns.Add(_DbConnect.AddDb(new MessagePattern
+            {
+                Subject = "Новая тема",
+                Body = "Введите текст письма..."
+            }));
             SelectedMessagePattern = MessagePatterns.OrderBy(t => t.Id).LastOrDefault();
 
         }
@@ -215,7 +217,7 @@ namespace MailSender.ViewModels
         private bool CanUpdateMessagePatternExecuted(object p)
         {
             return SelectedMessagePattern != null; //&&
-                //!MessagePatterns.Contains(SelectedMessagePattern);
+                                                   //!MessagePatterns.Contains(SelectedMessagePattern);
         }
         private void OnUpdateMessagePatternExecuted(object p)
         {
@@ -226,9 +228,11 @@ namespace MailSender.ViewModels
         private void OnAddEmailAddressExecuted(object p)
         {
             SelectedEmailAddress = null;
-            EmailAddresses.Add(_DbConnect.AddDb(new EmailAddress { 
-                Person_Company = "Введите адресат", 
-                Email = "login@domainname.com" }));
+            EmailAddresses.Add(_DbConnect.AddDb(new EmailAddress
+            {
+                Person_Company = "Введите адресат",
+                Email = "login@domainname.com"
+            }));
             SelectedEmailAddress = EmailAddresses.OrderBy(t => t.Id).LastOrDefault();
 
         }
@@ -249,7 +253,7 @@ namespace MailSender.ViewModels
         private bool CanUpdateEmailAddressExecuted(object p)
         {
             return SelectedEmailAddress != null; //&&
-                //!EmailAddresses.Contains(SelectedEmailAddress);
+                                                 //!EmailAddresses.Contains(SelectedEmailAddress);
         }
         private void OnUpdateEmailAddressExecuted(object p)
         {
@@ -261,11 +265,13 @@ namespace MailSender.ViewModels
         {
             SelectedSmtpServer = null;
             SelectedSmtpAccount = null;
-            SmtpServers.Add(_DbConnect.AddDb(new SmtpServer { 
-                Title = "New SmtpServer", 
-                SmtpServ = "smtp.domaimname.com", 
-                Port = 587, 
-                UseSSL = true }));
+            SmtpServers.Add(_DbConnect.AddDb(new SmtpServer
+            {
+                Title = "New SmtpServer",
+                SmtpServ = "smtp.domaimname.com",
+                Port = 587,
+                UseSSL = true
+            }));
             SelectedSmtpServer = SmtpServers.OrderBy(t => t.Id).LastOrDefault();
             SelectedSmtpServer.SmtpAccounts = new ObservableCollection<SmtpAccount>();
 
@@ -292,7 +298,7 @@ namespace MailSender.ViewModels
         private bool CanUpdateSmtpServerExecuted(object p)
         {
             return SelectedSmtpServer != null; //&&
-                //!SmtpServers.Contains(SelectedSmtpServer);
+                                               //!SmtpServers.Contains(SelectedSmtpServer);
         }
         private void OnUpdateSmtpServerExecuted(object p)
         {
@@ -307,11 +313,13 @@ namespace MailSender.ViewModels
         private void OnAddSmtpAccountExecuted(object p)
         {
             SelectedSmtpAccount = null;
-            SmtpAccount newAccount = _DbConnect.AddDb(new SmtpAccount { 
-                AccountEmail = "login@domainname.com", 
-                Password="********", 
-                Person_Company="Введите адресат", 
-                SmtpServerId = SelectedSmtpServer.Id });
+            SmtpAccount newAccount = _DbConnect.AddDb(new SmtpAccount
+            {
+                AccountEmail = "login@domainname.com",
+                Password = "********",
+                Person_Company = "Введите адресат",
+                SmtpServerId = SelectedSmtpServer.Id
+            });
             SelectedSmtpAccount = SelectedSmtpServer.SmtpAccounts.OrderBy(t => t.Id).LastOrDefault();
             //SelectedPassword = _TextEncoder.DecodeSecure(SelectedSmtpAccount.Password);
 
@@ -333,7 +341,7 @@ namespace MailSender.ViewModels
         private bool CanUpdateSmtpAccountExecuted(object p)
         {
             return SelectedSmtpAccount != null; //&&
-                //SelectedSmtpServer.SmtpAccounts.Contains(SelectedSmtpAccount);
+                                                //SelectedSmtpServer.SmtpAccounts.Contains(SelectedSmtpAccount);
         }
         private void OnUpdateSmtpAccountExecuted(object p)
         {
@@ -341,58 +349,8 @@ namespace MailSender.ViewModels
             _DbConnect.UpdateDb(SelectedSmtpAccount);
             //SelectedPassword = null;
         }
-        private ICommand _AddMessageSendContainer;
-        public ICommand AddMessageSendContainer => _AddMessageSendContainer ??= new LambdaCommand(OnAddMessageSendContainerExecuted, CanAddMessageSendContainerExecuted);
-        private bool CanAddMessageSendContainerExecuted(object p)
-        {
-            return SelectedSmtpAccountForEmail != null &&
-                SelectedSmtpServerForEmail != null &&
-                SelectedEmailAddressForEmail != null &&
-                SelectedMessagePatternForEmail != null &&
-                SelectedDateTimeForEmail != null &&
-                SelectedTimeForEmail != null;
-        }
-        private void OnAddMessageSendContainerExecuted(object p)
-        {
-            MessageSendContainers.Add(_DbConnect.AddDb(new MessageSendContainer { 
-                SmtpServerUse = SelectedSmtpServerForEmail.SmtpServ,
-                PortUse = SelectedSmtpServerForEmail.Port,
-                SSLUse = SelectedSmtpServerForEmail.UseSSL,
-                SmtpAccountEmailUse = SelectedSmtpAccountForEmail.AccountEmail,
-                SmtpAccountPasswordUse = SelectedSmtpAccountForEmail.Password,
-                SmtpAccountPerson_CompanyUse = SelectedSmtpAccountForEmail.Person_Company,
-                EmailAddressesTo = EmailAddressesForEmail,
-                Subject = SelectedMessagePatternForEmail.Subject,
-                Body = SelectedMessagePatternForEmail.Body,
-                SendDate = SelectedDateTimeForEmail,
-                Status = "" }));
-            SelectedMessageSendContainer = MessageSendContainers.OrderBy(t => t.Id).LastOrDefault();
 
-        }
-        private ICommand _DeleteMessageSendContainer;
-        public ICommand DeleteMessageSendContainer => _DeleteMessageSendContainer ??= new LambdaCommand(OnDeleteMessageSendContainerExecuted, CanDeleteMessageSendContainerExecuted);
-        private bool CanDeleteMessageSendContainerExecuted(object p)
-        {
-            return SelectedMessageSendContainer != null;
-        }
-        private void OnDeleteMessageSendContainerExecuted(object p)
-        {
-            _DbConnect.DeleteDb(SelectedMessageSendContainer);
-            MessageSendContainers.Remove(SelectedMessageSendContainer);
-            SelectedMessageSendContainer = null;
-        }
-        private ICommand _UpdateMessageSendContainer;
-        public ICommand UpdateMessageSendContainer => _UpdateMessageSendContainer ??= new LambdaCommand(OnUpdateMessageSendContainerExecuted, CanUpdateMessageSendContainerExecuted);
-        private bool CanUpdateMessageSendContainerExecuted(object p)
-        {
-            return SelectedMessageSendContainer != null; //&&
-                //!MessageSendContainers.Contains(SelectedMessageSendContainer) &&
-                //!MessageSendOutContainers.Contains(SelectedMessageSendContainer);
-        }
-        private void OnUpdateMessageSendContainerExecuted(object p)
-        {
-            _DbConnect.UpdateDb(SelectedMessageSendContainer);
-        }
+
         #endregion
 
         #region Commands for scheduler
@@ -419,9 +377,13 @@ namespace MailSender.ViewModels
         }
         private void OnAddCorrectMessagePatternExecuted(object p)
         {
-            MessagePatterns.Add(_DbConnect.AddDb(new MessagePattern { Subject = SubjectForEmail
-                , Body = BodyForEmail})) ;
-            
+            MessagePatterns.Add(_DbConnect.AddDb(new MessagePattern
+            {
+                Subject = SubjectForEmail
+                ,
+                Body = BodyForEmail
+            }));
+
         }
         private ICommand _AddSubjectBodyForEmail;
         public ICommand AddSubjectBodyForEmail => _AddSubjectBodyForEmail ??= new LambdaCommand(OnAddSubjectBodyForEmailExecuted, CanAddSubjectBodyForEmailExecuted);
@@ -458,8 +420,8 @@ namespace MailSender.ViewModels
                 SmtpAccountPasswordUse = SelectedSmtpAccountForEmail.Password,
                 SmtpAccountPerson_CompanyUse = SelectedSmtpAccountForEmail.Person_Company,
                 EmailAddressesTo = EmailAddressesForEmail,
-                Subject = SelectedMessagePatternForEmail.Subject,
-                Body = SelectedMessagePatternForEmail.Body,
+                Subject = SubjectForEmail,
+                Body = BodyForEmail,
                 SendDate = DateTime.Now,
                 Status = "Письмо отправляется"
             });
@@ -505,8 +467,8 @@ namespace MailSender.ViewModels
                 SmtpAccountPasswordUse = SelectedSmtpAccountForEmail.Password,
                 SmtpAccountPerson_CompanyUse = SelectedSmtpAccountForEmail.Person_Company,
                 EmailAddressesTo = EmailAddressesForEmail,
-                Subject = SelectedMessagePatternForEmail.Subject,
-                Body = SelectedMessagePatternForEmail.Body,
+                Subject = SubjectForEmail,
+                Body = BodyForEmail,
                 SendDate = SelectedDateTimeForEmail,
                 Status = "Запланирована отправка."
             });
@@ -523,6 +485,34 @@ namespace MailSender.ViewModels
             SubjectForEmail = string.Empty;
             BodyForEmail = string.Empty;
             SelectedDateTimeForEmail = DateTime.Now;
+        }
+        #endregion
+
+        #region Commands for Assignments
+
+        private ICommand _DeleteMessageSendContainer;
+        public ICommand DeleteMessageSendContainer => _DeleteMessageSendContainer ??= new LambdaCommand(OnDeleteMessageSendContainerExecuted, CanDeleteMessageSendContainerExecuted);
+        private bool CanDeleteMessageSendContainerExecuted(object p)
+        {
+            return SelectedMessageSendContainer != null;
+        }
+        private void OnDeleteMessageSendContainerExecuted(object p)
+        {
+            _DbConnect.DeleteDb(SelectedMessageSendContainer);
+            MessageSendContainers.Remove(SelectedMessageSendContainer);
+            SelectedMessageSendContainer = null;
+
+        }
+        private ICommand _UpdateMessageSendContainer;
+        public ICommand UpdateMessageSendContainer => _UpdateMessageSendContainer ??= new LambdaCommand(OnUpdateMessageSendContainerExecuted, CanUpdateMessageSendContainerExecuted);
+        private bool CanUpdateMessageSendContainerExecuted(object p)
+        {
+            return SelectedMessageSendContainer != null;
+
+        }
+        private void OnUpdateMessageSendContainerExecuted(object p)
+        {
+            _DbConnect.UpdateDb(SelectedMessageSendContainer);
         }
         #endregion
     }

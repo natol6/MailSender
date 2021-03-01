@@ -13,9 +13,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleTest", "ConsoleTest\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MailSender.lib", "MailSender.lib\MailSender.lib.csproj", "{31857AAB-9444-485E-AF7A-68BCC4E98F3C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MailSender.Tests", "Tests\MailSender.Tests\MailSender.Tests.csproj", "{BD351C75-D3A5-4377-BC95-C7C583BF663A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MailSender.Tests", "Tests\MailSender.Tests\MailSender.Tests.csproj", "{BD351C75-D3A5-4377-BC95-C7C583BF663A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MailSender.lib.Tests", "Tests\MailSender.lib.Tests\MailSender.lib.Tests.csproj", "{C6774B7E-3509-4685-8546-BD1C1F70E150}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MailSender.lib.Tests", "Tests\MailSender.lib.Tests\MailSender.lib.Tests.csproj", "{C6774B7E-3509-4685-8546-BD1C1F70E150}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataRead", "DataRead\DataRead.csproj", "{46AAF463-134E-4250-BAB5-3D7D474B1CCE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -47,6 +49,10 @@ Global
 		{C6774B7E-3509-4685-8546-BD1C1F70E150}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C6774B7E-3509-4685-8546-BD1C1F70E150}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C6774B7E-3509-4685-8546-BD1C1F70E150}.Release|Any CPU.Build.0 = Release|Any CPU
+		{46AAF463-134E-4250-BAB5-3D7D474B1CCE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{46AAF463-134E-4250-BAB5-3D7D474B1CCE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{46AAF463-134E-4250-BAB5-3D7D474B1CCE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{46AAF463-134E-4250-BAB5-3D7D474B1CCE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -56,6 +62,7 @@ Global
 		{1E8C9AC1-BCBD-464A-8128-D517E974637C} = {F23151F4-557A-456D-8416-F5D24169E997}
 		{BD351C75-D3A5-4377-BC95-C7C583BF663A} = {F23151F4-557A-456D-8416-F5D24169E997}
 		{C6774B7E-3509-4685-8546-BD1C1F70E150} = {F23151F4-557A-456D-8416-F5D24169E997}
+		{46AAF463-134E-4250-BAB5-3D7D474B1CCE} = {F23151F4-557A-456D-8416-F5D24169E997}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {43C6AEB0-505C-4911-943E-A953F4E63F6D}
