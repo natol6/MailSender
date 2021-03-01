@@ -54,7 +54,7 @@
                                 </StackPanel>
                             </Button>
                         </UniformGrid>
-                        <ListView Name="SmtpAccounts" ItemsSource="{Binding SelectedSmtpServer.SmtpAccounts}" SelectedItem="{Binding SelectedSmtpAccount}" DisplayMemberPath="AccountEmail"/>
+                        <ListView Name="SmtpAccounts" ItemsSource="{Binding SelectedSmtpServer.SmtpAccounts}" SelectedItem="{Binding SelectedSmtpAccount}" DisplayMemberPath="AccountEmail" SelectionChanged="SmtpAccounts_SelectionChanged"/>
                     </DockPanel>
                 </GroupBox>
                 <DockPanel DockPanel.Dock="Top">
@@ -149,7 +149,7 @@
                             </StackPanel>
                             <StackPanel Orientation="Horizontal" Margin="5">
                                 <TextBlock Text="Пароль" Width="90"/>
-                                <PasswordBox Width="200" Name="Password" IsInactiveSelectionHighlightEnabled="True">
+                                <PasswordBox Width="200" Name="PasswordBox">
                                     <i:Interaction.Behaviors>
                                         <behavior:PasswordBoxBindingBehavior Password="{Binding SelectedPassword}"/>
                                     </i:Interaction.Behaviors>

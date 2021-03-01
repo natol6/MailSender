@@ -442,7 +442,10 @@ namespace MailSender.ViewModels
                 SelectedSmtpAccountForEmail != null &&
                 EmailAddressesForEmail != null &&
                 SubjectForEmail != null &&
-                BodyForEmail != null;
+                BodyForEmail != null &&
+                EmailAddressesForEmail != string.Empty &&
+                SubjectForEmail != string.Empty &&
+                BodyForEmail != string.Empty;
         }
         private void OnSendEmailExecuted(object p)
         {
@@ -472,8 +475,54 @@ namespace MailSender.ViewModels
                 SelectedSmtpAccountForEmail = null;
                 SelectedEmailAddressForEmail = null;
                 SelectedMessagePatternForEmail = null;
+                EmailAddressesForEmail = string.Empty;
+                SubjectForEmail = string.Empty;
+                BodyForEmail = string.Empty;
             }
-            
+        }
+        private ICommand _SendEmailScheduler;
+        public ICommand SendEmailScheduler => _SendEmailScheduler ??= new LambdaCommand(OnSendEmailSchedulerExecuted, CanSendEmailSchedulerExecuted);
+        private bool CanSendEmailSchedulerExecuted(object p)
+        {
+            return SelectedSmtpServerForEmail != null &&
+                SelectedSmtpAccountForEmail != null &&
+                EmailAddressesForEmail != null &&
+                SubjectForEmail != null &&
+                BodyForEmail != null &&
+                EmailAddressesForEmail != string.Empty &&
+                SubjectForEmail != string.Empty &&
+                BodyForEmail != string.Empty &&
+                SelectedDateTimeForEmail > DateTime.Now;
+        }
+        private void OnSendEmailSchedulerExecuted(object p)
+        {
+            var messageEmailOut = _DbConnect.AddDb(new MessageSendContainer
+            {
+                SmtpServerUse = SelectedSmtpServerForEmail.SmtpServ,
+                PortUse = SelectedSmtpServerForEmail.Port,
+                SSLUse = SelectedSmtpServerForEmail.UseSSL,
+                SmtpAccountEmailUse = SelectedSmtpAccountForEmail.AccountEmail,
+                SmtpAccountPasswordUse = SelectedSmtpAccountForEmail.Password,
+                SmtpAccountPerson_CompanyUse = SelectedSmtpAccountForEmail.Person_Company,
+                EmailAddressesTo = EmailAddressesForEmail,
+                Subject = SelectedMessagePatternForEmail.Subject,
+                Body = SelectedMessagePatternForEmail.Body,
+                SendDate = SelectedDateTimeForEmail,
+                Status = "Запланирована отправка."
+            });
+            MessageBox.Show($"Письмо '{messageEmailOut.Subject}', " +
+                $"запланировано к отправке {messageEmailOut.SendDate:dd.mm.yyyy hh:mm}"
+                , "Планирование отправки почты", MessageBoxButton.OK, MessageBoxImage.Information);
+            _DbConnect.UpdateDb(messageEmailOut);
+            MessageSendContainers.Add(messageEmailOut);
+            SelectedSmtpServerForEmail = null;
+            SelectedSmtpAccountForEmail = null;
+            SelectedEmailAddressForEmail = null;
+            SelectedMessagePatternForEmail = null;
+            EmailAddressesForEmail = string.Empty;
+            SubjectForEmail = string.Empty;
+            BodyForEmail = string.Empty;
+            SelectedDateTimeForEmail = DateTime.Now;
         }
         #endregion
     }
