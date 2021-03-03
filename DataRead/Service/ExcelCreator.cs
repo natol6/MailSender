@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace DataRead.Service
 {
@@ -54,7 +56,7 @@ namespace DataRead.Service
             const int count = 100_000;
 
             var rnd = new Random();
-            const string data_file = "senders.csv";
+            const string data_file = "sendersnew.csv";
             using var writer = new StreamWriter(data_file, false, Encoding.UTF8);
             writer.WriteLine("id;Фамилия;Имя;Отчество;Адрес");
             for (var i = 1; i < count; i++)
@@ -67,6 +69,8 @@ namespace DataRead.Service
                 Console.WriteLine(str);
                 writer.WriteLine(str);
             }
+            var thread_id = Thread.CurrentThread.ManagedThreadId;
+            MessageBox.Show($"В потоке {thread_id} сгенерирован список адресатов и сохранен в файле 'sendersnew.csv'", "Генерация списка адресатов", MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
         private static string Transliterate(this string str) => str

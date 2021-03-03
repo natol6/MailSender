@@ -7,6 +7,7 @@ using MimeKit;
 using MailKit.Net.Smtp;
 using System.Threading;
 using static System.Net.Mime.MediaTypeNames;
+using System.Diagnostics;
 
 namespace ConsoleTest
 {
@@ -19,29 +20,37 @@ namespace ConsoleTest
         {
             Console.Write("Введите число для рассчета факториала этого числа и суммы целых чисел от нуля до этого числа: ");
             long num = Int64.Parse(Console.ReadLine());
-            DataValue factorial = new DataValue(num, PrintFactorial);
-            DataValue summanum = new DataValue(num, PrintSummaNum);
             
-            var threadFactorial = new Thread(() => factorial.ThreadFactorial());
-            var threadSummaNum = new Thread(() => summanum.ThreadSummaNum());
+            long ansFactorial = 0;
+            long ansSummaNum = 0;
+            
+            var threadFactorial = new Thread(() => ansFactorial = Factorial(num));
+            var threadSummaNum = new Thread(() => ansSummaNum = SummaNum(num));
+            Stopwatch stopwatch = new Stopwatch();
             Console.WriteLine("\nРассчет в разных потоках:");
-            DateTime begin = DateTime.Now;
+            
+            stopwatch.Start();
             threadFactorial.Start();
             threadSummaNum.Start();
             threadFactorial.Join();
             threadSummaNum.Join();
-            DateTime end = DateTime.Now;
-            Console.WriteLine($"Время рассчета в разных потоках: {end - begin}");
+            stopwatch.Stop();
+            
+            Console.WriteLine($"Факториал введенного числа равен: {ansFactorial}");
+            Console.WriteLine($"Сумма целых чисел от нуля до введенного числа равна: {ansSummaNum}");
+            Console.WriteLine($"Время рассчета в разных потоках: {stopwatch.ElapsedMilliseconds} миллисекунд");
             
             Console.WriteLine("\nРассчет в одном потоке:");
-            begin = DateTime.Now;
+            
+            stopwatch.Start();
             Console.WriteLine($"Факториал введенного числа равен: {Factorial(num)}");
             Console.WriteLine($"Сумма целых чисел от нуля до введенного числа равна: {SummaNum(num)}");
-            end = DateTime.Now;
-            Console.WriteLine($"Время рассчета в одном потоке: {end - begin}");
+            stopwatch.Stop();
+            Console.WriteLine($"Время рассчета в одном потоке: {stopwatch.ElapsedMilliseconds} миллисекунд");
         }
         public static long Factorial(long val)
         {
+            Console.WriteLine($"Поток {Thread.CurrentThread.ManagedThreadId} рассчет факториала");
             long ans = 1;
             for (int i = 2; i <= val; i++)
             {
@@ -51,6 +60,7 @@ namespace ConsoleTest
         }
         public static long SummaNum(long val)
         {
+            Console.WriteLine($"Поток {Thread.CurrentThread.ManagedThreadId} рассчет суммы");
             long ans = 1;
             for (int i = 2; i <= val; i++)
             {
@@ -58,13 +68,6 @@ namespace ConsoleTest
             }
             return ans;
         }
-        public static void PrintFactorial(long val)
-        {
-            Console.WriteLine($"Факториал введенного числа равен: {val}");
-        }
-        public static void PrintSummaNum(long val)
-        {
-            Console.WriteLine($"Сумма целых чисел от нуля до введенного числа равна: {val}");
-        }
+        
     }
 }

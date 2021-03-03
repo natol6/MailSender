@@ -65,8 +65,8 @@ namespace DataRead.Service
                     case "s":
                         Style = int.Parse(attribute.Value);
                         break;
-                    case "customFormat":
-                        CustomFormat = int.Parse(attribute.Value);
+                    case "customFormat" when int.TryParse(attribute.Value, out var format):
+                        CustomFormat = format;
                         break;
                     case "hidden":
                         Hidden = attribute.Value == "1";
@@ -80,8 +80,8 @@ namespace DataRead.Service
                     case "collapsed":
                         Collapsed = attribute.Value == "1";
                         break;
-                    case "customHeight":
-                        CustomHeight = double.Parse(attribute.Value, CultureInfo.InvariantCulture);
+                    case "customHeight" when double.TryParse(attribute.Value, NumberStyles.Any,CultureInfo.InvariantCulture, out var height):
+                        CustomHeight = height;
                         break;
                 }
         }
