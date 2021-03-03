@@ -494,12 +494,13 @@ namespace MailSender.ViewModels
         public ICommand DeleteMessageSendContainer => _DeleteMessageSendContainer ??= new LambdaCommand(OnDeleteMessageSendContainerExecuted, CanDeleteMessageSendContainerExecuted);
         private bool CanDeleteMessageSendContainerExecuted(object p)
         {
-            return SelectedMessageSendContainer != null;
+            return true; //SelectedMessageSendContainer != null;
         }
         private void OnDeleteMessageSendContainerExecuted(object p)
         {
-            _DbConnect.DeleteDb(SelectedMessageSendContainer);
-            MessageSendContainers.Remove(SelectedMessageSendContainer);
+            MessageSendContainer msc = p as MessageSendContainer;
+            _DbConnect.DeleteDb(msc);
+            MessageSendContainers.Remove(msc);
             SelectedMessageSendContainer = null;
 
         }

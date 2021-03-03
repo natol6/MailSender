@@ -4,13 +4,16 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MailSender.Views"
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+             xmlns:behavior="clr-namespace:MailSender.Infrastructutre"
              xmlns:fa="http://schemas.fontawesome.com/icons/"
              DataContext="{Binding MainWindowModel, Source={StaticResource Locator}}"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
         <GroupBox Header="Задания">
-            <ListBox Name="MessagesForSend" ItemsSource="{Binding MessageSendContainers}" SelectedItem="{Binding SelectedMessageSendContainer}" HorizontalContentAlignment="Stretch">
+            <ListBox Name="MessagesForSend" ItemsSource="{Binding MessageSendContainers}" HorizontalContentAlignment="Stretch">
+                
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <GroupBox>
@@ -18,7 +21,7 @@
                                 <StackPanel Orientation="Horizontal">
                                     <TextBlock Text="{Binding StringFormat=Задание от {0: dd.MM.yyyy hh:mm}, Path=SendDate}"/>
                                     <Button Margin="5,0,0,0" Command="{Binding DeleteMessageSendContainer}" 
-                                            CommandParameter="{Binding RelativeSource={RelativeSource AncestorType={x:Type ListBoxItem}}}"
+                                            CommandParameter="{Binding SelectedItem, ElementName=MessagesForSend}"
                                             Background="Transparent" BorderThickness="0" ToolTip="Удалить задание" >
                                         <fa:ImageAwesome Height="15" Icon="Solid_TrashAlt" 
                                                      Foreground="Tomato"/>
