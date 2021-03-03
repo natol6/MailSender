@@ -24,5 +24,75 @@ namespace MailSender
         {
             InitializeComponent();
         }
+
+        private void AddMessagePattern_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void DeleteMessagePattern_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void SaveMessagePattern_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void AddAddress_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void DeleteAddress_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void SaveEmail_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void AddSmtpServer_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void DeleteSmtpServer_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void SSLUse_Unchecked(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void SSLUse_Checked(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void SaveSmtpServer_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void AddSmtpAccount_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void DeleteSmtpAccount_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void SaveAccount_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }
