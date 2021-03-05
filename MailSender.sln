@@ -17,9 +17,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MailSender.Tests", "Tests\M
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MailSender.lib.Tests", "Tests\MailSender.lib.Tests\MailSender.lib.Tests.csproj", "{C6774B7E-3509-4685-8546-BD1C1F70E150}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataRead", "DataRead\DataRead.csproj", "{F6606289-8466-482B-9B66-C2351050BD8C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataRead", "DataRead\DataRead.csproj", "{F6606289-8466-482B-9B66-C2351050BD8C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MatrixMultiplication", "MatrixMultiplication\MatrixMultiplication.csproj", "{71F60BCD-5DFE-4920-A089-17C41ECB908B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MatrixMultiplication", "MatrixMultiplication\MatrixMultiplication.csproj", "{71F60BCD-5DFE-4920-A089-17C41ECB908B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FileReader", "FileReader\FileReader.csproj", "{09EF3784-40F2-45CD-81C5-A6649BFA9E13}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -59,6 +61,10 @@ Global
 		{71F60BCD-5DFE-4920-A089-17C41ECB908B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{71F60BCD-5DFE-4920-A089-17C41ECB908B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{71F60BCD-5DFE-4920-A089-17C41ECB908B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{09EF3784-40F2-45CD-81C5-A6649BFA9E13}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{09EF3784-40F2-45CD-81C5-A6649BFA9E13}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{09EF3784-40F2-45CD-81C5-A6649BFA9E13}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{09EF3784-40F2-45CD-81C5-A6649BFA9E13}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -70,6 +76,7 @@ Global
 		{C6774B7E-3509-4685-8546-BD1C1F70E150} = {F23151F4-557A-456D-8416-F5D24169E997}
 		{F6606289-8466-482B-9B66-C2351050BD8C} = {F23151F4-557A-456D-8416-F5D24169E997}
 		{71F60BCD-5DFE-4920-A089-17C41ECB908B} = {F23151F4-557A-456D-8416-F5D24169E997}
+		{09EF3784-40F2-45CD-81C5-A6649BFA9E13} = {F23151F4-557A-456D-8416-F5D24169E997}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {43C6AEB0-505C-4911-943E-A953F4E63F6D}
