@@ -10,7 +10,11 @@ using Microsoft.Extensions.Hosting;
 using MailSender.ViewModels;
 using MailSender.lib.Service;
 using MailSender.lib.Interfaces;
-using MailSender.interfaces;
+using MailSender.lib.Models;
+using Microsoft.Extensions.Configuration;
+using Microsoft.EntityFrameworkCore;
+using MailSender.Data;
+using MailSender.Infrastructutre.Services;
 
 namespace MailSender
 {
@@ -32,12 +36,23 @@ namespace MailSender
             }
         }
         public static IServiceProvider Services => Hosting.Services;
+        public static IHostBuilder CreatehostBuilder(string[] args) =>
+            Host.CreateDefaultBuilder(args)
+            .ConfigureAppConfiguration(opt => opt.AddJsonFile("appsetting.json", false, true))
+            .ConfigureServices(ConfigureServices);
         private static void ConfigureServices(
             HostBuilderContext host,
             IServiceCollection services)
         {
             services.AddSingleton<MainWindowViewModel>();
-            services.AddSingleton<IDataBaseMailSender, DBMailSenderService>();
+            services.AddDbContext<MailSenderDB>(opt => opt.UseSqlServer(host.Configuration.GetConnectionString("Default")));
+            //services.AddSingleton<IRepository<EmailAddress>, RepositoryEmailaddresses>();
+            //services.AddSingleton<IRepository<MessagePattern>, RepositoryMessagePatterns>();
+            //services.AddSingleton<IRepository<SmtpServer>, RepositorySmtpServers>();
+            //services.AddSingleton<IRepository<SmtpAccount>, RepositorySmtpAccounts>();
+            //services.AddSingleton<IRepository<MessageSendContainer>, RepositoryMessageSendContainers>();
+            services.AddScoped(typeof(IRepositoryDB<>), typeof(DBRepository<>));
+            services.AddSingleton<IRepositoryDB<SmtpServer>, DBRepositorySmtpServers>();
             services.AddTransient<ITextEncoder, TextEncoder>();
             services.AddSingleton<IMailsender, MailSenderService>();
             // Здесь нам надо добавить все сервисы нашего приложения
