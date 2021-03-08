@@ -13,14 +13,22 @@
     <Grid>
         <GroupBox Header="Задания">
             <ListBox Name="MessagesForSend" ItemsSource="{Binding MessageSendContainers}" HorizontalContentAlignment="Stretch">
-                
+                <ListBox.ItemContainerStyle>
+                    <Style TargetType="ListBoxItem">
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="IsSelected" Value="True"/>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </ListBox.ItemContainerStyle>
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <GroupBox>
                             <GroupBox.Header>
                                 <StackPanel Orientation="Horizontal">
                                     <TextBlock Text="{Binding StringFormat=Задание от {0: dd.MM.yyyy hh:mm}, Path=SendDate}"/>
-                                    <Button Margin="5,0,0,0" Command="{Binding DeleteMessageSendContainer}" 
+                                    <Button Margin="5,0,0,0" Command="{Binding DeleteMessageSendContainer}" DataContext="{Binding MainWindowModel, Source={StaticResource Locator}}"
                                             CommandParameter="{Binding SelectedItem, ElementName=MessagesForSend}"
                                             Background="Transparent" BorderThickness="0" ToolTip="Удалить задание" >
                                         <fa:ImageAwesome Height="15" Icon="Solid_TrashAlt" 

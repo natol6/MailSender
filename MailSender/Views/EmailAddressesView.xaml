@@ -51,10 +51,7 @@
                         <StackPanel Orientation="Horizontal">
                             <fa:ImageAwesome Height="18" Icon="Solid_Save" Margin="5,0,0,0"
                                                      Foreground="DarkBlue"/>
-                            <fa:ImageAwesome Height="18" Icon="Solid_ArrowRight" Margin="5,0,0,0"
-                                                     Foreground="DarkBlue"/>
-                            <fa:ImageAwesome Height="18" Icon="Solid_Database" Margin="5,0,0,0"
-                                                     Foreground="DarkBlue"/>
+                            
                         </StackPanel>
                     </Button>
                 </UniformGrid>

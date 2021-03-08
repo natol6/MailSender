@@ -24,35 +24,25 @@ namespace MailSender
     public partial class App : Application
     {
         private static IHost __Hosting;
-        public static IHost Hosting
-        {
-            get
-            {
-                if (__Hosting != null) return __Hosting;
-                var host_builder = Host
-                .CreateDefaultBuilder(Environment.GetCommandLineArgs());
-                host_builder.ConfigureServices(ConfigureServices);
-                return __Hosting = host_builder.Build();
-            }
-        }
+        public static IHost Hosting => __Hosting ??= CreateHostBuilder(Environment.GetCommandLineArgs()).Build();
+        
         public static IServiceProvider Services => Hosting.Services;
-        public static IHostBuilder CreatehostBuilder(string[] args) =>
+        public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
-            .ConfigureAppConfiguration(opt => opt.AddJsonFile("appsetting.json", false, true))
+            .ConfigureAppConfiguration(opt => opt.AddJsonFile("appsettings.json", false, true))
             .ConfigureServices(ConfigureServices);
         private static void ConfigureServices(
             HostBuilderContext host,
             IServiceCollection services)
         {
-            services.AddSingleton<MainWindowViewModel>();
             services.AddDbContext<MailSenderDB>(opt => opt.UseSqlServer(host.Configuration.GetConnectionString("Default")));
-            //services.AddSingleton<IRepository<EmailAddress>, RepositoryEmailaddresses>();
-            //services.AddSingleton<IRepository<MessagePattern>, RepositoryMessagePatterns>();
-            //services.AddSingleton<IRepository<SmtpServer>, RepositorySmtpServers>();
-            //services.AddSingleton<IRepository<SmtpAccount>, RepositorySmtpAccounts>();
-            //services.AddSingleton<IRepository<MessageSendContainer>, RepositoryMessageSendContainers>();
-            services.AddScoped(typeof(IRepositoryDB<>), typeof(DBRepository<>));
-            services.AddSingleton<IRepositoryDB<SmtpServer>, DBRepositorySmtpServers>();
+            services.AddSingleton<MainWindowViewModel>();
+            //services.AddScoped(typeof(IRepositoryDB<>), typeof(DBRepository<>));
+            services.AddScoped<IRepositoryDB<EmailAddress>, DBRepository<EmailAddress>>();
+            services.AddScoped<IRepositoryDB<MessagePattern>, DBRepository<MessagePattern>>();
+            services.AddScoped<IRepositoryDB<MessageSendContainer>, DBRepository<MessageSendContainer>>();
+            services.AddScoped<IRepositoryDB<SmtpAccount>, DBRepository<SmtpAccount>>();
+            services.AddScoped<IRepositoryDB<SmtpServer>, DBRepositorySmtpServers>();
             services.AddTransient<ITextEncoder, TextEncoder>();
             services.AddSingleton<IMailsender, MailSenderService>();
             // Здесь нам надо добавить все сервисы нашего приложения

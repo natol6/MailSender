@@ -420,8 +420,7 @@ namespace MailSender.ViewModels
         {
             MessagePattern mp = new MessagePattern
             {
-                Subject = SubjectForEmail
-                ,
+                Subject = SubjectForEmail,
                 Body = BodyForEmail
             };
             int id = _DbMessagePattern.Add(mp);
@@ -543,7 +542,7 @@ namespace MailSender.ViewModels
         public ICommand DeleteMessageSendContainer => _DeleteMessageSendContainer ??= new LambdaCommand(OnDeleteMessageSendContainerExecuted, CanDeleteMessageSendContainerExecuted);
         private bool CanDeleteMessageSendContainerExecuted(object p)
         {
-            return true; //SelectedMessageSendContainer != null;
+            return p as MessageSendContainer != null;
         }
         private void OnDeleteMessageSendContainerExecuted(object p)
         {
@@ -552,7 +551,7 @@ namespace MailSender.ViewModels
             if (yes)
             {
                 MessageSendContainers.Remove(msc);
-                SelectedMessageSendContainer = null;
+                //SelectedMessageSendContainer = null;
             }
 
         }
