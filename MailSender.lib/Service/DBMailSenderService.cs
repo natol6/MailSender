@@ -7,10 +7,11 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.EntityFrameworkCore;
 using MailSender.lib.Models;
 using MailSender.lib.Data;
+using MailSender.lib.Interfaces;
 
 namespace MailSender.lib.Service
 {
-    public class DBMailSenderService
+    public class DBMailSenderService : IDataBaseMailSender
     {
         public static IConfiguration Configuration { get; } = new ConfigurationBuilder()
             .AddJsonFile("appsettings.json", false, true)
@@ -22,38 +23,32 @@ namespace MailSender.lib.Service
         {
             db.Database.EnsureCreated();
         }
-        public IEnumerable<SmtpAccount> DbGetAccounts()
-        {
-            return db.SmtpAccounts.ToArray();
-        }
-        public IEnumerable<SmtpServer> DbGetMailServices()
-        {
-            return db.SmtpServers.ToArray();
-        }
-        public IEnumerable<MessagePattern> DbGetMessagePattern()
-        {
-            return db.MessagePatterns.ToArray();
-        }
-        public IEnumerable<MessageSendContainer> DbGetMessageSendContainer()
-        {
-            return db.MessageSendContainers.ToArray();
-        }
-        public MessagePattern AddBdMessagePattern(MessagePattern mp)
+        public IEnumerable<SmtpAccount> DBGetSmtpAccounts() => db.SmtpAccounts.ToArray();
+
+        public IEnumerable<SmtpServer> DBGetSmtpServers() => db.SmtpServers.ToArray();
+        
+        public IEnumerable<MessagePattern> DBGetMessagePatterns() => db.MessagePatterns.ToArray();
+        
+        public IEnumerable<EmailAddress> DBGetEmailAddresses() => db.EmailAddresses.ToArray();
+        
+        public IEnumerable<MessageSendContainer> DBGetMessageSendContainers() => db.MessageSendContainers.ToArray();
+        
+        public MessagePattern AddDb(MessagePattern mp)
         {
             db.MessagePatterns.Add(mp);
             db.SaveChanges();
             return db.MessagePatterns.OrderBy(d => d.Id).LastOrDefault();
         }
-        public void DeleteBdMessagePattern(int id)
+        public void DeleteDb(MessagePattern mp)
         {
-            MessagePattern mp = db.MessagePatterns.FirstOrDefault(d => d.Id == id);
-            if (mp != null)
+            MessagePattern mpdb = db.MessagePatterns.FirstOrDefault(d => d.Id == mp.Id);
+            if (mpdb != null)
             {
-                db.MessagePatterns.Remove(mp);
+                db.MessagePatterns.Remove(mpdb);
                 db.SaveChanges();
             }
         }
-        public void UpdateBdMessagePattern(MessagePattern mp)
+        public void UpdateDb(MessagePattern mp)
         {
             MessagePattern mpdb = db.MessagePatterns.FirstOrDefault(d => d.Id == mp.Id);
             if (mpdb != null)
@@ -65,22 +60,22 @@ namespace MailSender.lib.Service
             }
 
         }
-        public SmtpAccount AddBdSmtpAccount(SmtpAccount ac)
+        public SmtpAccount AddDb(SmtpAccount ac)
         {
             db.SmtpAccounts.Add(ac);
             db.SaveChanges();
             return db.SmtpAccounts.OrderBy(d => d.Id).LastOrDefault();
         }
-        public void DeleteBdSmtpAccount(int id)
+        public void DeleteDb(SmtpAccount ac)
         {
-            SmtpAccount ac = db.SmtpAccounts.FirstOrDefault(d => d.Id == id);
-            if (ac != null)
+            SmtpAccount acdb = db.SmtpAccounts.FirstOrDefault(d => d.Id == ac.Id);
+            if (acdb != null)
             {
-                db.SmtpAccounts.Remove(ac);
+                db.SmtpAccounts.Remove(acdb);
                 db.SaveChanges();
             }
         }
-        public void UpdateBdAccount(SmtpAccount ac)
+        public void UpdateDb(SmtpAccount ac)
         {
             SmtpAccount acdb = db.SmtpAccounts.FirstOrDefault(d => d.Id == ac.Id);
             if (acdb != null)
@@ -93,22 +88,22 @@ namespace MailSender.lib.Service
             }
 
         }
-        public SmtpServer AddBdSmtpServer(SmtpServer serv)
+        public SmtpServer AddDb(SmtpServer serv)
         {
             db.SmtpServers.Add(serv);
             db.SaveChanges();
             return db.SmtpServers.OrderBy(d => d.Id).LastOrDefault();
         }
-        public void DeleteBdSmtpServer(int id)
+        public void DeleteDb(SmtpServer ms)
         {
-            SmtpServer ms = db.SmtpServers.FirstOrDefault(d => d.Id == id);
-            if (ms != null)
+            SmtpServer msdb = db.SmtpServers.FirstOrDefault(d => d.Id == ms.Id);
+            if (msdb != null)
             {
-                db.SmtpServers.Remove(ms);
+                db.SmtpServers.Remove(msdb);
                 db.SaveChanges();
             }
         }
-        public void UpdateBdSmtpServer(SmtpServer serv)
+        public void UpdateDb(SmtpServer serv)
         {
             SmtpServer servdb = db.SmtpServers.FirstOrDefault(d => d.Id == serv.Id);
             if (servdb != null)
@@ -122,22 +117,22 @@ namespace MailSender.lib.Service
             }
 
         }
-        public MessageSendContainer AddBdMessageSendContainer(MessageSendContainer msc)
+        public MessageSendContainer AddDb(MessageSendContainer msc)
         {
             db.MessageSendContainers.Add(msc);
             db.SaveChanges();
             return db.MessageSendContainers.OrderBy(d => d.Id).LastOrDefault();
         }
-        public void DeleteBdMessageSendContainer(int id)
+        public void DeleteDb(MessageSendContainer msc)
         {
-            MessageSendContainer msc = db.MessageSendContainers.FirstOrDefault(d => d.Id == id);
-            if (msc != null)
+            MessageSendContainer mscdb = db.MessageSendContainers.FirstOrDefault(d => d.Id == msc.Id);
+            if (mscdb != null)
             {
-                db.MessageSendContainers.Remove(msc);
+                db.MessageSendContainers.Remove(mscdb);
                 db.SaveChanges();
             }
         }
-        public void UpdateBdMessageSendContaine(MessageSendContainer msc)
+        public void UpdateDb(MessageSendContainer msc)
         {
             MessageSendContainer mscdb = db.MessageSendContainers.FirstOrDefault(d => d.Id == msc.Id);
             if (mscdb != null)
@@ -154,6 +149,33 @@ namespace MailSender.lib.Service
                 mscdb.SendDate = msc.SendDate;
                 mscdb.Status = msc.Status;
                 db.MessageSendContainers.Update(mscdb);
+                db.SaveChanges();
+            }
+
+        }
+        public EmailAddress AddDb(EmailAddress em)
+        {
+            db.EmailAddresses.Add(em);
+            db.SaveChanges();
+            return db.EmailAddresses.OrderBy(d => d.Id).LastOrDefault();
+        }
+        public void DeleteDb(EmailAddress em)
+        {
+            EmailAddress emdb = db.EmailAddresses.FirstOrDefault(d => d.Id == em.Id);
+            if (emdb != null)
+            {
+                db.EmailAddresses.Remove(emdb);
+                db.SaveChanges();
+            }
+        }
+        public void UpdateDb(EmailAddress em)
+        {
+            EmailAddress emdb = db.EmailAddresses.FirstOrDefault(d => d.Id == em.Id);
+            if (emdb != null)
+            {
+                emdb.Person_Company = em.Person_Company;
+                emdb.Email = em.Email;
+                db.EmailAddresses.Update(emdb);
                 db.SaveChanges();
             }
 
