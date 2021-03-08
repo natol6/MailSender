@@ -38,11 +38,13 @@ namespace MailSender
         {
             services.AddSingleton<MainWindowViewModel>();
             services.AddSingleton<IDataBaseMailSender, DBMailSenderService>();
+            services.AddTransient<ITextEncoder, TextEncoder>();
+            services.AddSingleton<IMailsender, MailSenderService>();
             // Здесь нам надо добавить все сервисы нашего приложения
             // в коллекцию services
             // В переменной host хранится информация, на пример,
             // о пути запуска нашего приложения
-            
+
         }
 
     }

@@ -1,0 +1,96 @@
+﻿<UserControl x:Class="MailSender.Views.EmailAddressesView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:MailSender.Views"
+             xmlns:vr="clr-namespace:MailSender.Infrastructutre.ValidationRules"
+             xmlns:fa="http://schemas.fontawesome.com/icons/"
+             DataContext="{Binding MainWindowModel, Source={StaticResource Locator}}"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <GroupBox Grid.Column="0" Header="Список адресатов">
+            <DockPanel>
+                <UniformGrid DockPanel.Dock="Bottom" Rows="1" Columns="4" Margin="2">
+                    <Button Name="AddAddress" ToolTip="Добавить" Margin="3" Command="{Binding AddEmailAddress}">
+                        <StackPanel Orientation="Horizontal">
+                            <fa:ImageAwesome Height="18" Icon="Solid_PlusCircle" 
+                                                     Foreground="DarkGreen"/>
+                        </StackPanel>
+                    </Button>
+                    <Button Name="DeleteAddress" ToolTip="Удалить" Margin="3" Command="{Binding DeleteEmailAddress}">
+                        <StackPanel Orientation="Horizontal">
+                            <fa:ImageAwesome Height="18" Icon="Solid_TrashAlt" 
+                                                     Foreground="Tomato"/>
+                        </StackPanel>
+                    </Button>
+                </UniformGrid>
+                <DataGrid AutoGenerateColumns="False"
+                                        IsReadOnly="True"
+                                        GridLinesVisibility="Vertical"
+                                        VerticalGridLinesBrush="DarkGray"
+                                        AlternatingRowBackground="#330000FF"
+                                        ItemsSource="{Binding EmailAddresses}"
+                                        SelectedItem="{Binding SelectedEmailAddress}">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Адресат" Binding="{Binding Path=Person_Company}" Width="*"/>
+                        <DataGridTextColumn Header="Email" Binding="{Binding Path=Email}" MinWidth="170"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </DockPanel>
+        </GroupBox>
+        <GroupBox Grid.Column="1" Header="Выбранный адресат">
+            <DockPanel>
+                <UniformGrid Rows="1" DockPanel.Dock="Bottom">
+                    <Button Name="SaveEmail" ToolTip="Сохранить изменения в БД" Margin="0,0,10,0"  HorizontalAlignment="Right" Command="{Binding UpdateEmailAddress}">
+                        <StackPanel Orientation="Horizontal">
+                            <fa:ImageAwesome Height="18" Icon="Solid_Save" Margin="5,0,0,0"
+                                                     Foreground="DarkBlue"/>
+                            <fa:ImageAwesome Height="18" Icon="Solid_ArrowRight" Margin="5,0,0,0"
+                                                     Foreground="DarkBlue"/>
+                            <fa:ImageAwesome Height="18" Icon="Solid_Database" Margin="5,0,0,0"
+                                                     Foreground="DarkBlue"/>
+                        </StackPanel>
+                    </Button>
+                </UniformGrid>
+                <StackPanel Margin="10,10,10,10">
+                    <StackPanel Orientation="Horizontal" Margin="5">
+                        <TextBlock Text="Адресат" Width="90"/>
+                        <TextBox Width="250" Name="Person_Company" Validation.Error="Person_Company_Error">
+                            <TextBox.Text>
+                                <Binding Path="SelectedEmailAddress.Person_Company" NotifyOnValidationError="True" UpdateSourceTrigger="PropertyChanged">
+                                    <Binding.ValidationRules>
+                                        <vr:ValidationString MinLen="2" MaxLen="40"/>
+                                        <ExceptionValidationRule/>
+                                        <DataErrorValidationRule/>
+                                        <NotifyDataErrorValidationRule/>
+                                    </Binding.ValidationRules>
+                                </Binding>
+                            </TextBox.Text>
+                        </TextBox>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Margin="5">
+                        <TextBlock Text="Email" Width="90"/>
+                        <TextBox Width="250" Name="Email" Validation.Error="Email_Error">
+                            <TextBox.Text>
+                                <Binding Path="SelectedEmailAddress.Email" NotifyOnValidationError="True" UpdateSourceTrigger="PropertyChanged">
+                                    <Binding.ValidationRules>
+                                        <vr:RegExValidation Pattern="(\w+\.)*\w+@(\w+\.)+[A-Za-z]+" ErrorMessage="Неверный формат адреса электронной почты"/>
+                                        <ExceptionValidationRule/>
+                                        <DataErrorValidationRule/>
+                                        <NotifyDataErrorValidationRule/>
+                                    </Binding.ValidationRules>
+                                </Binding>
+                            </TextBox.Text>
+                        </TextBox>
+                    </StackPanel>
+                </StackPanel>
+            </DockPanel>
+        </GroupBox>
+    </Grid>
+</UserControl>
