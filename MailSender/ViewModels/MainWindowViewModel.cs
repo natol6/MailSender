@@ -191,6 +191,15 @@ namespace MailSender.ViewModels
         public ICommand LoadDataCommand => _LoadDataCommand ??= new LambdaCommand(OnLoadDataCommandExecuted);
         private void OnLoadDataCommandExecuted(object p)
         {
+            Task task = new Task(DataLoadFromDB);
+            task.Start();
+            task.Wait();
+            var sendedMessages = MessageSendContainers.Where(m => m.SendDate <= DateTime.Now).ToArray();
+            if (sendedMessages.Count() == 0) return;
+            Parallel.For(0, sendedMessages.Length, i => SendMessage(sendedMessages[i]));
+        }
+        private void DataLoadFromDB()
+        {
             var accounts = _DbSmtpAccount.GetAll();
             IEnumerable<SmtpServer> sserv = _DbSmtpServer.GetAll();
             SmtpServers = new ObservableCollection<SmtpServer>(sserv);
@@ -201,6 +210,16 @@ namespace MailSender.ViewModels
                 (messages.Where(m => m.Status == "1").OrderBy(m => m.SendDate));
             MessageSendOutContainers = new ObservableCollection<MessageSendContainer>
                 (messages.Where(m => m.Status != "1"));
+        }
+        private void SendMessage(MessageSendContainer msc)
+        {
+            var message = _MailSender.SendMessage(msc);
+            MessageBox.Show($"Письмо '{msc.Subject}', " +
+                $"запланированное к отправке {msc.SendDate:dd.mm.yyyy hh:mm}, " +
+                $"{message}", "Отправка почты", MessageBoxButton.OK, MessageBoxImage.Information);
+            _DbMessageSendContainer.Update(msc);
+            MessageSendOutContainers.Add(msc);
+            if (MessageSendContainers.Contains(msc)) MessageSendContainers.Remove(msc);
         }
         private ICommand _AddMessagePattern;
         public ICommand AddMessagePattern => _AddMessagePattern ??= new LambdaCommand(OnAddMessagePatternExecuted);
@@ -296,14 +315,13 @@ namespace MailSender.ViewModels
                 SmtpServ = "smtp.domaimname.com",
                 Port = 587,
                 UseSSL = true,
-                //SmtpAccounts = new ObservableCollection<SmtpAccount>()
+                
             };
             int id = _DbSmtpServer.Add(sserv);
             sserv.Id = id;
             SmtpServers.Add(sserv);
             SelectedSmtpServer = SmtpServers.OrderBy(t => t.Id).LastOrDefault();
-            //SelectedSmtpServer.SmtpAccounts = new ObservableCollection<SmtpAccount>();
-
+            
         }
         private ICommand _DeleteSmtpServer;
         public ICommand DeleteSmtpServer => _DeleteSmtpServer ??= new LambdaCommand(OnDeleteSmtpServerExecuted, CanDeleteSmtpServerExecuted);
@@ -466,12 +484,13 @@ namespace MailSender.ViewModels
             };
             int id = _DbMessageSendContainer.Add(msc);
             msc.Id = id;
-            var message = _MailSender.SendMessage(msc);
-            MessageBox.Show($"Письмо '{msc.Subject}', " +
-                $"запланированное к отправке {msc.SendDate:dd.mm.yyyy hh:mm}, " +
-                $"{message}", "Отправка почты", MessageBoxButton.OK, MessageBoxImage.Information);
-            _DbMessageSendContainer.Update(msc);
-            MessageSendOutContainers.Add(msc);
+            //var message = _MailSender.SendMessage(msc);
+            //MessageBox.Show($"Письмо '{msc.Subject}', " +
+            //$"запланированное к отправке {msc.SendDate:dd.mm.yyyy hh:mm}, " +
+            //$"{message}", "Отправка почты", MessageBoxButton.OK, MessageBoxImage.Information);
+            //_DbMessageSendContainer.Update(msc);
+            //MessageSendOutContainers.Add(msc);
+            SendMessage(msc);
             if (msc.Status == "Отправлено")
             {
                 SelectedSmtpServerForEmail = null;
