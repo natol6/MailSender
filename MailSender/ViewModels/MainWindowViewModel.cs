@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using MailSender.ViewModels.Base;
 using System.Collections.ObjectModel;
 using MailSender.lib.Service;
-using MailSender.lib.Models;
+using MailSender.lib.Entities;
 using MailSender.lib.Commands;
 using MailSender.lib.Interfaces;
 using System.Windows.Input;
@@ -198,9 +198,9 @@ namespace MailSender.ViewModels
             EmailAddresses = new ObservableCollection<EmailAddress>(_DbEmailAddress.GetAll());
             var messages = _DbMessageSendContainer.GetAll();
             MessageSendContainers = new ObservableCollection<MessageSendContainer>
-                (messages.Where(m => m.SendDate > DateTime.Now));
+                (messages.Where(m => m.Status == "1").OrderBy(m => m.SendDate));
             MessageSendOutContainers = new ObservableCollection<MessageSendContainer>
-                (messages.Where(m => m.SendDate <= DateTime.Now));
+                (messages.Where(m => m.Status != "1"));
         }
         private ICommand _AddMessagePattern;
         public ICommand AddMessagePattern => _AddMessagePattern ??= new LambdaCommand(OnAddMessagePatternExecuted);
@@ -237,8 +237,7 @@ namespace MailSender.ViewModels
         public ICommand UpdateMessagePattern => _UpdateMessagePattern ??= new LambdaCommand(OnUpdateMessagePatternExecuted, CanUpdateMessagePatternExecuted);
         private bool CanUpdateMessagePatternExecuted(object p)
         {
-            return SelectedMessagePattern != null; //&&
-                                                   //!MessagePatterns.Contains(SelectedMessagePattern);
+            return SelectedMessagePattern != null; 
         }
         private void OnUpdateMessagePatternExecuted(object p)
         {
@@ -279,8 +278,7 @@ namespace MailSender.ViewModels
         public ICommand UpdateEmailAddress => _UpdateEmailAddress ??= new LambdaCommand(OnUpdateEmailAddressExecuted, CanUpdateEmailAddressExecuted);
         private bool CanUpdateEmailAddressExecuted(object p)
         {
-            return SelectedEmailAddress != null; //&&
-                                                 //!EmailAddresses.Contains(SelectedEmailAddress);
+            return SelectedEmailAddress != null; 
         }
         private void OnUpdateEmailAddressExecuted(object p)
         {
@@ -333,8 +331,7 @@ namespace MailSender.ViewModels
         public ICommand UpdateSmtpServer => _UpdateSmtpServer ??= new LambdaCommand(OnUpdateSmtpServerExecuted, CanUpdateSmtpServerExecuted);
         private bool CanUpdateSmtpServerExecuted(object p)
         {
-            return SelectedSmtpServer != null; //&&
-                                               //!SmtpServers.Contains(SelectedSmtpServer);
+            return SelectedSmtpServer != null; 
         }
         private void OnUpdateSmtpServerExecuted(object p)
         {
@@ -381,14 +378,13 @@ namespace MailSender.ViewModels
         public ICommand UpdateSmtpAccount => _UpdateSmtpAccount ??= new LambdaCommand(OnUpdateSmtpAccountExecuted, CanUpdateSmtpAccountExecuted);
         private bool CanUpdateSmtpAccountExecuted(object p)
         {
-            return SelectedSmtpAccount != null; //&&
-                                                //SelectedSmtpServer.SmtpAccounts.Contains(SelectedSmtpAccount);
+            return SelectedSmtpAccount != null;
         }
         private void OnUpdateSmtpAccountExecuted(object p)
         {
             SelectedSmtpAccount.Password = _TextEncoder.Encode(SelectedPassword);
             _DbSmtpAccount.Update(SelectedSmtpAccount);
-            //SelectedPassword = null;
+          
         }
 
 
@@ -476,7 +472,7 @@ namespace MailSender.ViewModels
                 $"{message}", "Отправка почты", MessageBoxButton.OK, MessageBoxImage.Information);
             _DbMessageSendContainer.Update(msc);
             MessageSendOutContainers.Add(msc);
-            if (msc.Status == "Отправлено.")
+            if (msc.Status == "Отправлено")
             {
                 SelectedSmtpServerForEmail = null;
                 SelectedSmtpAccountForEmail = null;
@@ -515,7 +511,7 @@ namespace MailSender.ViewModels
                 Subject = SubjectForEmail,
                 Body = BodyForEmail,
                 SendDate = SelectedDateTimeForEmail,
-                Status = "Запланирована отправка."
+                Status = "1"
             };
             int id = _DbMessageSendContainer.Add(msc);
             msc.Id = id;
@@ -525,6 +521,7 @@ namespace MailSender.ViewModels
                 , "Планирование отправки почты", MessageBoxButton.OK, MessageBoxImage.Information);
             _DbMessageSendContainer.Update(msc);
             MessageSendContainers.Add(msc);
+            MessageSendContainers.OrderBy(m => m.SendDate);
             SelectedSmtpServerForEmail = null;
             SelectedSmtpAccountForEmail = null;
             SelectedEmailAddressForEmail = null;

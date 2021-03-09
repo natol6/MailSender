@@ -8,7 +8,7 @@ using System.Runtime.CompilerServices;
 using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
 
-namespace MailSender.lib.Models
+namespace MailSender.lib.Entities
 {
     public class SmtpServer : Entity
     {

@@ -10,7 +10,7 @@ using Microsoft.Extensions.Hosting;
 using MailSender.ViewModels;
 using MailSender.lib.Service;
 using MailSender.lib.Interfaces;
-using MailSender.lib.Models;
+using MailSender.lib.Entities;
 using Microsoft.Extensions.Configuration;
 using Microsoft.EntityFrameworkCore;
 using MailSender.Data;
@@ -36,7 +36,7 @@ namespace MailSender
             IServiceCollection services)
         {
             services.AddDbContext<MailSenderDB>(opt => opt.UseSqlServer(host.Configuration.GetConnectionString("Default")));
-            services.AddSingleton<MainWindowViewModel>();
+            services.AddScoped<MainWindowViewModel>();
             //services.AddScoped(typeof(IRepositoryDB<>), typeof(DBRepository<>));
             services.AddScoped<IRepositoryDB<EmailAddress>, DBRepository<EmailAddress>>();
             services.AddScoped<IRepositoryDB<MessagePattern>, DBRepository<MessagePattern>>();

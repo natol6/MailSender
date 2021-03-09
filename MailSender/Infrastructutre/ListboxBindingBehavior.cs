@@ -8,7 +8,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Interactivity;
-using MailSender.lib.Models;
+using MailSender.lib.Entities;
 
 namespace MailSender.Infrastructutre
 {

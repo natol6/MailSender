@@ -14,7 +14,7 @@
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="180"></ColumnDefinition>
+            <ColumnDefinition Width="190"></ColumnDefinition>
             <ColumnDefinition Width="*"></ColumnDefinition>
         </Grid.ColumnDefinitions>
         <GroupBox Grid.Column="0" Header="Smtp-серверы">
@@ -24,12 +24,14 @@
                         <StackPanel Orientation="Horizontal">
                             <fa:ImageAwesome Height="18" Icon="Solid_PlusCircle" 
                                                      Foreground="DarkGreen"/>
+                            <TextBlock Text="Добавить" Margin="5,0,0,0"/>
                         </StackPanel>
                     </Button>
                     <Button Name="DeleteSmtpServer" ToolTip="Удалить" Margin="3" Command="{Binding DeleteSmtpServer}">
                         <StackPanel Orientation="Horizontal">
                             <fa:ImageAwesome Height="18" Icon="Solid_TrashAlt" 
                                                      Foreground="Tomato"/>
+                            <TextBlock Text="Удалить" Margin="5,0,0,0"/>
                         </StackPanel>
                     </Button>
                 </UniformGrid>
@@ -38,19 +40,21 @@
         </GroupBox>
         <GroupBox Grid.Column="1" Header="Выбранный Smtp-сервер">
             <DockPanel>
-                <GroupBox DockPanel.Dock="Right"  Header="Аккаунты Smtp-сервера" Width="180">
+                <GroupBox DockPanel.Dock="Right"  Header="Аккаунты Smtp-сервера" Width="190">
                     <DockPanel>
                         <UniformGrid DockPanel.Dock="Bottom" Rows="1" Margin="2">
                             <Button Name="AddSmtpAccount" ToolTip="Добавить" Margin="3" Command="{Binding AddSmtpAccount}">
                                 <StackPanel Orientation="Horizontal">
                                     <fa:ImageAwesome Height="18" Icon="Solid_PlusCircle" 
                                                      Foreground="DarkGreen"/>
+                                    <TextBlock Text="Добавить" Margin="5,0,0,0"/>
                                 </StackPanel>
                             </Button>
                             <Button Name="DeleteSmtpAccount" ToolTip="Удалить" Margin="3" Command="{Binding DeleteSmtpAccount}">
                                 <StackPanel Orientation="Horizontal">
                                     <fa:ImageAwesome Height="18" Icon="Solid_TrashAlt" 
                                                      Foreground="Tomato"/>
+                                    <TextBlock Text="Удалить" Margin="5,0,0,0"/>
                                 </StackPanel>
                             </Button>
                         </UniformGrid>
@@ -62,10 +66,7 @@
                         <StackPanel Orientation="Horizontal">
                             <fa:ImageAwesome Height="18" Icon="Solid_Save" Margin="5,0,0,0"
                                                      Foreground="DarkBlue"/>
-                            <fa:ImageAwesome Height="18" Icon="Solid_ArrowRight" Margin="5,0,0,0"
-                                                     Foreground="DarkBlue"/>
-                            <fa:ImageAwesome Height="18" Icon="Solid_Database" Margin="5,0,0,0"
-                                                     Foreground="DarkBlue"/>
+                            <TextBlock Text="Сохранить" Margin="5,0,0,0"/>
                         </StackPanel>
                     </Button>
                     <StackPanel Margin="3">
@@ -125,10 +126,7 @@
                             <StackPanel Orientation="Horizontal">
                                 <fa:ImageAwesome Height="18" Icon="Solid_Save" Margin="5,0,0,0"
                                                      Foreground="DarkBlue"/>
-                                <fa:ImageAwesome Height="18" Icon="Solid_ArrowRight" Margin="5,0,0,0"
-                                                     Foreground="DarkBlue"/>
-                                <fa:ImageAwesome Height="18" Icon="Solid_Database" Margin="5,0,0,0"
-                                                     Foreground="DarkBlue"/>
+                                <TextBlock Text="Сохранить" Margin="5,0,0,0"/>
                             </StackPanel>
                         </Button>
                         <StackPanel Margin="3">

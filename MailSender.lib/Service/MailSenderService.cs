@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using MailSender.lib.Models;
+using MailSender.lib.Entities;
 using System.Security;
 using MailKit.Net.Smtp;
 using MailKit;
@@ -34,10 +34,11 @@ namespace MailSender.lib.Service
             message.Subject = msc.Subject;
             message.Body = new TextPart("plain") { Text = msc.Body };
             using var client = new SmtpClient();
-            client.Connect(msc.SmtpServerUse, msc.PortUse, msc.SSLUse);
-            client.Authenticate(msc.SmtpAccountEmailUse, _TextEncoder.Decode(msc.SmtpAccountPasswordUse));
+           
             try
             {
+                client.Connect(msc.SmtpServerUse, msc.PortUse, msc.SSLUse);
+                client.Authenticate(msc.SmtpAccountEmailUse, _TextEncoder.Decode(msc.SmtpAccountPasswordUse));
                 client.Send(message);
                 client.Disconnect(true);
                 msc.Status = "Отправлено.";

@@ -5,16 +5,18 @@ using System.Text;
 using System.Threading.Tasks;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Net;
+using System.Net.Mail;
 using System.ComponentModel.DataAnnotations;
 
-namespace MailSender.lib.Models
+namespace MailSender.lib.Entities
 {
-    public class MessagePattern : Entity
+    public class EmailAddress : Entity
     {
         [Required]
-        public string Subject { get; set; }
+        public string Person_Company { get; set; }
         [Required]
-        public string Body { get; set; }
+        public string Email { get; set; }
         
     }
 }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using MailSender.lib.Models;
+using MailSender.lib.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace MailSender.Data

@@ -8,7 +8,7 @@ using System.Runtime.CompilerServices;
 using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
 
-namespace MailSender.lib.Models
+namespace MailSender.lib.Entities
 {
     public class MessageSendContainer : Entity
     {
@@ -35,11 +35,5 @@ namespace MailSender.lib.Models
         [Required]
         public string Status { get; set; }
         
-        
-        public override string ToString()
-        {
-            IEnumerable<string> addresses = EmailAddressesTo.Split(";");
-            return $"Отправитель: {SmtpAccountPerson_CompanyUse}\n\nПолучатели: {EmailAddressesTo}\n\nПисьмо: {Subject}";
-        }
     }
 }
