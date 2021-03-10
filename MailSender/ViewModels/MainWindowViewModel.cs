@@ -13,6 +13,8 @@ using System.Windows.Input;
 using System.Security;
 using System.Windows;
 using System.ComponentModel;
+using System.Diagnostics;
+using System.Timers;
 
 namespace MailSender.ViewModels
 {
@@ -145,6 +147,68 @@ namespace MailSender.ViewModels
             get => _SelectedDateTimeForEmail;
             set => Set(ref _SelectedDateTimeForEmail, value);
         }
+        private int _SendedEmailAll;
+        public int SendedEmailAll
+        {
+            get => _SendedEmailAll;
+            set => Set(ref _SendedEmailAll, value);
+        }
+        private int _SendedEmailAllError;
+        public int SendedEmailAllError
+        {
+            get => _SendedEmailAllError;
+            set => Set(ref _SendedEmailAllError, value);
+        }
+        private int _SendedEmailYear;
+        public int SendedEmailYear
+        {
+            get => _SendedEmailYear;
+            set => Set(ref _SendedEmailYear, value);
+        }
+        private int _SendedEmailYearError;
+        public int SendedEmailYearError
+        {
+            get => _SendedEmailYearError;
+            set => Set(ref _SendedEmailYearError, value);
+        }
+        private int _SendedEmailMonth;
+        public int SendedEmailMonth
+        {
+            get => _SendedEmailMonth;
+            set => Set(ref _SendedEmailMonth, value);
+        }
+        private int _SendedEmailMonthError;
+        public int SendedEmailMonthError
+        {
+            get => _SendedEmailMonthError;
+            set => Set(ref _SendedEmailMonthError, value);
+        }
+        private int _SendedEmailToday;
+        public int SendedEmailToday
+        {
+            get => _SendedEmailToday;
+            set => Set(ref _SendedEmailToday, value);
+        }
+        private int _SendedEmailTodayError;
+        public int SendedEmailTodayError
+        {
+            get => _SendedEmailTodayError;
+            set => Set(ref _SendedEmailTodayError, value);
+        }
+        private void StatisticUpdate()
+        {
+            SendedEmailAll = MessageSendOutContainers.Where(m => m.Status == "2").Count();
+            SendedEmailAllError = MessageSendOutContainers.Where(m => m.Status == "0").Count();
+            SendedEmailYear = MessageSendOutContainers.Where(m => m.Status == "2" && m.SendDate > new DateTime(DateTime.Now.Year, 01, 01, 0, 0, 0)).Count();
+            SendedEmailYearError = MessageSendOutContainers.Where(m => m.Status == "0" && m.SendDate > new DateTime(DateTime.Now.Year, 01, 01, 0, 0, 0)).Count();
+            SendedEmailMonth = MessageSendOutContainers.Where(m => m.Status == "2" && m.SendDate > new DateTime(DateTime.Now.Year, DateTime.Now.Month, 01, 0, 0, 0)).Count();
+            SendedEmailMonthError = MessageSendOutContainers.Where(m => m.Status == "0" && m.SendDate > new DateTime(DateTime.Now.Year, DateTime.Now.Month, 01, 0, 0, 0)).Count();
+            SendedEmailToday = MessageSendOutContainers.Where(m => m.Status == "2" && m.SendDate > new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 0, 0, 0)).Count();
+            SendedEmailTodayError = MessageSendOutContainers.Where(m => m.Status == "0" && m.SendDate > new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 0, 0, 0)).Count();
+
+        }
+        private readonly Stopwatch _StopwatchTimer = Stopwatch.StartNew();
+        public TimeSpan UpTime => _StopwatchTimer.Elapsed;
         private readonly IRepositoryDB<MessagePattern> _DbMessagePattern;
         private readonly IRepositoryDB<EmailAddress> _DbEmailAddress;
         private readonly IRepositoryDB<SmtpServer> _DbSmtpServer;
@@ -169,6 +233,9 @@ namespace MailSender.ViewModels
             _TextEncoder = textEncoder;
             _MailSender = mailsender;
             PropertyChanged += BindPasswordAccount;
+            var timer = new Timer(100);
+            timer.Elapsed += (_, _) => OnPropertyChanged(nameof(UpTime));
+            timer.Start();
         }
         private void BindPasswordAccount(object sender, PropertyChangedEventArgs e)
         {
@@ -194,9 +261,11 @@ namespace MailSender.ViewModels
             Task task = new Task(DataLoadFromDB);
             task.Start();
             task.Wait();
+            StatisticUpdate();
             var sendedMessages = MessageSendContainers.Where(m => m.SendDate <= DateTime.Now).ToArray();
             if (sendedMessages.Count() == 0) return;
             Parallel.For(0, sendedMessages.Length, i => SendMessage(sendedMessages[i]));
+            StatisticUpdate();
         }
         private void DataLoadFromDB()
         {
@@ -210,6 +279,7 @@ namespace MailSender.ViewModels
                 (messages.Where(m => m.Status == "1").OrderBy(m => m.SendDate));
             MessageSendOutContainers = new ObservableCollection<MessageSendContainer>
                 (messages.Where(m => m.Status != "1"));
+            
         }
         private void SendMessage(MessageSendContainer msc)
         {
@@ -220,6 +290,7 @@ namespace MailSender.ViewModels
             _DbMessageSendContainer.Update(msc);
             MessageSendOutContainers.Add(msc);
             if (MessageSendContainers.Contains(msc)) MessageSendContainers.Remove(msc);
+            
         }
         private ICommand _AddMessagePattern;
         public ICommand AddMessagePattern => _AddMessagePattern ??= new LambdaCommand(OnAddMessagePatternExecuted);
@@ -500,6 +571,7 @@ namespace MailSender.ViewModels
                 SubjectForEmail = string.Empty;
                 BodyForEmail = string.Empty;
             }
+            StatisticUpdate();
         }
         private ICommand _SendEmailScheduler;
         public ICommand SendEmailScheduler => _SendEmailScheduler ??= new LambdaCommand(OnSendEmailSchedulerExecuted, CanSendEmailSchedulerExecuted);
