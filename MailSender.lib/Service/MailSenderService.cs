@@ -33,10 +33,10 @@ namespace MailSender.lib.Service
             message.To.AddRange(addresses);
             message.Subject = msc.Subject;
             message.Body = new TextPart("plain") { Text = msc.Body };
-            using var client = new SmtpClient();
-           
+                       
             try
             {
+                using var client = new SmtpClient();
                 client.Connect(msc.SmtpServerUse, msc.PortUse, msc.SSLUse);
                 client.Authenticate(msc.SmtpAccountEmailUse, _TextEncoder.Decode(msc.SmtpAccountPasswordUse));
                 client.Send(message);

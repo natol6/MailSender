@@ -373,7 +373,6 @@ namespace MailSender.ViewModels
             };
             int id = _DbSmtpAccount.Add(sac);
             sac.Id = id;
-            //SelectedSmtpServer.SmtpAccounts.Add(sac);
             SelectedSmtpAccount = SelectedSmtpServer.SmtpAccounts.OrderBy(t => t.Id).LastOrDefault();
             
         }
