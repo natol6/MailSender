@@ -15,6 +15,8 @@ using System.Windows;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Timers;
+using System.Threading;
+using System.Windows.Threading;
 
 namespace MailSender.ViewModels
 {
@@ -195,6 +197,7 @@ namespace MailSender.ViewModels
             get => _SendedEmailTodayError;
             set => Set(ref _SendedEmailTodayError, value);
         }
+        static object locker = new object();
         private void StatisticUpdate()
         {
             SendedEmailAll = MessageSendOutContainers.Where(m => m.Status == "2").Count();
@@ -208,7 +211,13 @@ namespace MailSender.ViewModels
 
         }
         private readonly Stopwatch _StopwatchTimer = Stopwatch.StartNew();
-        public TimeSpan UpTime => _StopwatchTimer.Elapsed;
+        private TimeSpan _UpTime = TimeSpan.Zero;
+        public TimeSpan UpTime
+        {
+            get => _UpTime;
+            set => Set(ref _UpTime, value);
+        }
+        //public TimeSpan UpTime => _StopwatchTimer.Elapsed;
         private readonly IRepositoryDB<MessagePattern> _DbMessagePattern;
         private readonly IRepositoryDB<EmailAddress> _DbEmailAddress;
         private readonly IRepositoryDB<SmtpServer> _DbSmtpServer;
@@ -233,8 +242,9 @@ namespace MailSender.ViewModels
             _TextEncoder = textEncoder;
             _MailSender = mailsender;
             PropertyChanged += BindPasswordAccount;
-            var timer = new Timer(100);
-            timer.Elapsed += (_, _) => OnPropertyChanged(nameof(UpTime));
+            var timer = new DispatcherTimer();
+            timer.Interval = new TimeSpan(0, 0, 1);
+            timer.Tick += (_, _) => UpTime = _StopwatchTimer.Elapsed;
             timer.Start();
         }
         private void BindPasswordAccount(object sender, PropertyChangedEventArgs e)
@@ -261,11 +271,14 @@ namespace MailSender.ViewModels
             Task task = new Task(DataLoadFromDB);
             task.Start();
             task.Wait();
-            StatisticUpdate();
             var sendedMessages = MessageSendContainers.Where(m => m.SendDate <= DateTime.Now).ToArray();
-            if (sendedMessages.Count() == 0) return;
-            Parallel.For(0, sendedMessages.Length, i => SendMessage(sendedMessages[i]));
+            if (sendedMessages.Count() > 0) Parallel.ForEach(sendedMessages, SendMessage);
             StatisticUpdate();
+            foreach(MessageSendContainer msc in MessageSendContainers)
+            {
+                SendSheduler(msc);
+            }
+            
         }
         private void DataLoadFromDB()
         {
@@ -281,16 +294,34 @@ namespace MailSender.ViewModels
                 (messages.Where(m => m.Status != "1"));
             
         }
+        private void SendSheduler(MessageSendContainer msc)
+        {
+            CancellationTokenSource source = new CancellationTokenSource();
+            Task.Factory.StartNew(async () =>
+            {
+                await Task.Delay((TimeSpan)(msc.SendDate - DateTime.Now), source.Token);
+                SendMessage(msc);
+            });
+        }
         private void SendMessage(MessageSendContainer msc)
         {
+            msc.SendDate = DateTime.Now;
             var message = _MailSender.SendMessage(msc);
-            MessageBox.Show($"Письмо '{msc.Subject}', " +
-                $"запланированное к отправке {msc.SendDate:dd.mm.yyyy hh:mm}, " +
-                $"{message}", "Отправка почты", MessageBoxButton.OK, MessageBoxImage.Information);
-            _DbMessageSendContainer.Update(msc);
+            lock (locker)
+            {
+                _DbMessageSendContainer.Update(msc);
+            }
             MessageSendOutContainers.Add(msc);
-            if (MessageSendContainers.Contains(msc)) MessageSendContainers.Remove(msc);
-            
+            StatisticUpdate();
+            MessageBox.Show($"Письмо '{msc.Subject}', " +
+                $"запланированное к отправке {msc.SendDate:dd.MM.yyyy HH:mm}, " +
+                $"{message}", "Отправка почты", MessageBoxButton.OK, MessageBoxImage.Information);
+            if (!MessageSendContainers.Contains(msc))
+                return;
+            Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Normal, (ThreadStart)delegate ()
+            {
+                MessageSendContainers.Remove(msc);
+            });
         }
         private ICommand _AddMessagePattern;
         public ICommand AddMessagePattern => _AddMessagePattern ??= new LambdaCommand(OnAddMessagePatternExecuted);
@@ -550,7 +581,7 @@ namespace MailSender.ViewModels
                 Subject = SubjectForEmail,
                 Body = BodyForEmail,
                 SendDate = DateTime.Now,
-                Status = "Письмо отправляется"
+                Status = "1"
             };
             int id = _DbMessageSendContainer.Add(msc);
             msc.Id = id;
@@ -561,7 +592,7 @@ namespace MailSender.ViewModels
             //_DbMessageSendContainer.Update(msc);
             //MessageSendOutContainers.Add(msc);
             SendMessage(msc);
-            if (msc.Status == "Отправлено")
+            if (msc.Status == "2")
             {
                 SelectedSmtpServerForEmail = null;
                 SelectedSmtpAccountForEmail = null;
@@ -571,7 +602,7 @@ namespace MailSender.ViewModels
                 SubjectForEmail = string.Empty;
                 BodyForEmail = string.Empty;
             }
-            StatisticUpdate();
+            //StatisticUpdate();
         }
         private ICommand _SendEmailScheduler;
         public ICommand SendEmailScheduler => _SendEmailScheduler ??= new LambdaCommand(OnSendEmailSchedulerExecuted, CanSendEmailSchedulerExecuted);
@@ -605,13 +636,13 @@ namespace MailSender.ViewModels
             };
             int id = _DbMessageSendContainer.Add(msc);
             msc.Id = id;
-            
-            MessageBox.Show($"Письмо '{msc.Subject}', " +
-                $"запланировано к отправке {msc.SendDate:dd.mm.yyyy hh:mm}"
-                , "Планирование отправки почты", MessageBoxButton.OK, MessageBoxImage.Information);
-            _DbMessageSendContainer.Update(msc);
             MessageSendContainers.Add(msc);
-            MessageSendContainers.OrderBy(m => m.SendDate);
+            SendSheduler(msc);
+            MessageBox.Show($"Письмо '{msc.Subject}', " +
+                $"запланировано к отправке {msc.SendDate:dd.mm.yyyy HH:mm}"
+                , "Планирование отправки почты", MessageBoxButton.OK, MessageBoxImage.Information);
+            //_DbMessageSendContainer.Update(msc);
+            //MessageSendContainers.OrderBy(m => m.SendDate);
             SelectedSmtpServerForEmail = null;
             SelectedSmtpAccountForEmail = null;
             SelectedEmailAddressForEmail = null;

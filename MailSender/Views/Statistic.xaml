@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:sys="clr-namespace:System"
              xmlns:local="clr-namespace:MailSender.Views"
              xmlns:vr="clr-namespace:MailSender.Infrastructutre.ValidationRules"
              mc:Ignorable="d" 
@@ -70,6 +71,6 @@
         <TextBlock Grid.Column="1" Grid.Row="9" Text="{Binding EmailAddresses.Count}"/>
 
         <TextBlock Grid.Column="0" Grid.Row="10" Text="Время сеанса:"/>
-        <TextBlock Grid.Column="1" Grid.Row="10" Text="{Binding UpTime}"/>
+        <TextBlock Grid.Column="1" Grid.Row="10" Text="{Binding Path=UpTime, StringFormat='{}{0: HH:mm:ss}'}"/>
     </Grid>
 </UserControl>
