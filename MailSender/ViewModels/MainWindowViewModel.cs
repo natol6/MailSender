@@ -211,7 +211,7 @@ namespace MailSender.ViewModels
 
         }
         private readonly Stopwatch _StopwatchTimer = Stopwatch.StartNew();
-        private TimeSpan _UpTime = TimeSpan.Zero;
+        private TimeSpan _UpTime;
         public TimeSpan UpTime
         {
             get => _UpTime;
@@ -243,7 +243,7 @@ namespace MailSender.ViewModels
             _MailSender = mailsender;
             PropertyChanged += BindPasswordAccount;
             var timer = new DispatcherTimer();
-            timer.Interval = new TimeSpan(0, 0, 1);
+            //timer.Interval = new TimeSpan(0, 0, 1);
             timer.Tick += (_, _) => UpTime = _StopwatchTimer.Elapsed;
             timer.Start();
         }
