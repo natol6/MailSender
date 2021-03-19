@@ -71,6 +71,6 @@
         <TextBlock Grid.Column="1" Grid.Row="9" Text="{Binding EmailAddresses.Count}"/>
 
         <TextBlock Grid.Column="0" Grid.Row="10" Text="Время сеанса:"/>
-        <TextBlock Grid.Column="1" Grid.Row="10" Text="{Binding UpTime}"/>
+        <TextBlock Grid.Column="1" Grid.Row="10" Text="{Binding UpTime, StringFormat=hh\\:mm\\:ss}"/>
     </Grid>
 </UserControl>
