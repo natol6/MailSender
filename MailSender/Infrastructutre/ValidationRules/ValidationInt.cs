@@ -21,7 +21,7 @@ namespace MailSender.Infrastructutre.ValidationRules
                      ? ValidationResult.ValidResult
                      : new ValidationResult(false, ErrorMessage ?? "Строка не должна быть пустой");
             if (value is not string str) str = value.ToString();
-            if (!Int32.TryParse(str, out int num)) return new ValidationResult(false, ErrorMessage ?? "Вводимое значение должно быть целым числом");
+            if (!int.TryParse(str, out int num)) return new ValidationResult(false, ErrorMessage ?? "Вводимое значение должно быть целым числом");
             if (num < MinValue) 
                 return new ValidationResult(false, ErrorMessage ?? $"Значение не должно быть меньше {MinValue}");
             if (num > MaxValue) 

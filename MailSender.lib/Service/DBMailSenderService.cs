@@ -25,13 +25,13 @@ namespace MailSender.lib.Service
         }
         public IEnumerable<SmtpAccount> DBGetSmtpAccounts() => db.SmtpAccounts.ToArray();
 
-        public IEnumerable<SmtpServer> DBGetSmtpServers() => db.SmtpServers.ToArray();
+        public IEnumerable<SmtpServer> DBGetSmtpServers() => db.SmtpServers;
         
-        public IEnumerable<MessagePattern> DBGetMessagePatterns() => db.MessagePatterns.ToArray();
+        public IEnumerable<MessagePattern> DBGetMessagePatterns() => db.MessagePatterns;
         
-        public IEnumerable<EmailAddress> DBGetEmailAddresses() => db.EmailAddresses.ToArray();
+        public IEnumerable<EmailAddress> DBGetEmailAddresses() => db.EmailAddresses;
         
-        public IEnumerable<MessageSendContainer> DBGetMessageSendContainers() => db.MessageSendContainers.ToArray();
+        public IEnumerable<MessageSendContainer> DBGetMessageSendContainers() => db.MessageSendContainers;
         
         public MessagePattern AddDb(MessagePattern mp)
         {

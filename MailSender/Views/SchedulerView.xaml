@@ -29,14 +29,14 @@
                             <Setter Property="Background" Value="White"/>
                         </Style>
                     </StackPanel.Resources>
-                    <Button>
+                    <Button Command="{Binding SendEmailScheduler}">
                         <StackPanel Orientation="Horizontal">
                             <fa:ImageAwesome Height="18" Icon="Solid_Clock" 
                                                      Foreground="DarkGreen"/>
                             <TextBlock Text="Запланировать" Margin="5,0,0,0"/>
                         </StackPanel>
                     </Button>
-                    <Button>
+                    <Button Command="{Binding SendEmail}">
                         <StackPanel Orientation="Horizontal">
                             <fa:ImageAwesome Height="18" Icon="Solid_PaperPlane" 
                                                      Foreground="DarkGreen"/>

@@ -96,5 +96,11 @@ namespace MailSender.Views
                 ((Control)sender).ClearValue(ToolTipProperty);
             }
         }
+
+        private void SmtpAccounts_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            PasswordBox.Clear();
+            
+        }
     }
 }

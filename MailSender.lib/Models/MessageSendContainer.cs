@@ -136,5 +136,10 @@ namespace MailSender.lib.Models
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));
         }
+        public override string ToString()
+        {
+            IEnumerable<string> addresses = EmailAddressesTo.Split(";");
+            return $"Отправитель: {SmtpAccountPerson_CompanyUse}\n\nПолучатели: {EmailAddressesTo}\n\nПисьмо: {Subject}";
+        }
     }
 }
