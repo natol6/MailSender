@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:sys="clr-namespace:System"
              xmlns:local="clr-namespace:MailSender.Views"
              xmlns:vr="clr-namespace:MailSender.Infrastructutre.ValidationRules"
              mc:Ignorable="d" 
@@ -30,18 +31,46 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <TextBlock Grid.Column="0" Grid.Row="0" Text="Число отправленных писем:"/>
-        <TextBlock Grid.Column="1" Grid.Row="0" Text=""/>
+        <TextBlock Grid.Column="0" Grid.Row="0" Text="Общее число отправленных писем:"/>
+        <TextBlock Grid.Column="1" Grid.Row="0" Text="{Binding SendedEmailAll}"/>
 
-        <TextBlock Grid.Column="0" Grid.Row="1" Text="Число отправителей в базе:"/>
-        <TextBlock Grid.Column="1" Grid.Row="1" Text=""/>
+        <TextBlock Grid.Column="0" Grid.Row="1" Text="Общее число ошибок отправления:"/> 
+        <TextBlock Grid.Column="1" Grid.Row="1" Text="{Binding SendedEmailAllError}"/>
 
-        <TextBlock Grid.Column="0" Grid.Row="2" Text="Число получателей в базе:"/>
-        <TextBlock Grid.Column="1" Grid.Row="2" Text=""/>
+        <TextBlock Grid.Column="0" Grid.Row="2" Text="Отправлено писем в текущем году:"/>
+        <TextBlock Grid.Column="1" Grid.Row="2" Text="{Binding SendedEmailYear}"/>
 
-        <TextBlock Grid.Column="0" Grid.Row="3" Text="Время сеанса:"/>
-        <TextBlock Grid.Column="1" Grid.Row="3" Text=""/>
+        <TextBlock Grid.Column="0" Grid.Row="3" Text="Ошибок отправления в текущем году:"/>
+        <TextBlock Grid.Column="1" Grid.Row="3" Text="{Binding SendedEmailYearError}"/>
+
+        <TextBlock Grid.Column="0" Grid.Row="4" Text="Отправлено писем в текущем месяце:"/>
+        <TextBlock Grid.Column="1" Grid.Row="4" Text="{Binding SendedEmailMonth}"/>
+
+        <TextBlock Grid.Column="0" Grid.Row="5" Text="Ошибок отправления в текущем месяце:"/>
+        <TextBlock Grid.Column="1" Grid.Row="5" Text="{Binding SendedEmailMonthError}"/>
+
+        <TextBlock Grid.Column="0" Grid.Row="6" Text="Отправлено писем сегодня:"/>
+        <TextBlock Grid.Column="1" Grid.Row="6" Text="{Binding SendedEmailToday}"/>
+
+        <TextBlock Grid.Column="0" Grid.Row="7" Text="Ошибок отправления сегодня:"/>
+        <TextBlock Grid.Column="1" Grid.Row="7" Text="{Binding SendedEmailTodayError}"/>
+        
+        <TextBlock Grid.Column="0" Grid.Row="8" Text="Число SMTP серверов в базе:"/>
+        <TextBlock Grid.Column="1" Grid.Row="8" Text="{Binding SmtpServers.Count}"/>
+
+        <TextBlock Grid.Column="0" Grid.Row="9" Text="Число получателей в базе:"/>
+        <TextBlock Grid.Column="1" Grid.Row="9" Text="{Binding EmailAddresses.Count}"/>
+
+        <TextBlock Grid.Column="0" Grid.Row="10" Text="Время сеанса:"/>
+        <TextBlock Grid.Column="1" Grid.Row="10" Text="{Binding UpTime, StringFormat=hh\\:mm\\:ss}"/>
     </Grid>
 </UserControl>

@@ -29,8 +29,8 @@
                         <GroupBox>
                             <GroupBox.Header>
                                 <StackPanel Orientation="Horizontal">
-                                    <TextBlock Text="{Binding StringFormat=Задание от {0: dd.MM.yyyy hh:mm}, Path=SendDate}"/>
-                                    <Button Margin="5,0,0,0" Command="{Binding DeleteMessageSendContainer}" DataContext="{Binding MainWindowModel, Source={StaticResource Locator}}"
+                                    <TextBlock Text="{Binding StringFormat=Задание от {0: dd.MM.yyyy HH:mm}, Path=SendDate}"/>
+                                    <Button Margin="5,0,0,0" DataContext="{Binding MainWindowModel, Source={StaticResource Locator}}" Command="{Binding DeleteMessageSendContainer}" 
                                             CommandParameter="{Binding SelectedItem, ElementName=MessagesForSend}"
                                             Background="Transparent" BorderThickness="0" ToolTip="Удалить задание" >
                                         <fa:ImageAwesome Height="15" Icon="Solid_TrashAlt" 
