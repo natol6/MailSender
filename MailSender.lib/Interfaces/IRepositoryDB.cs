@@ -7,8 +7,16 @@ using MailSender.lib.Entities;
 
 namespace MailSender.lib.Interfaces
 {
-    public interface IMailsender
+    public interface IRepositoryDB<T> where T: Entity
     {
-        public string SendMessage(MessageSendContainer msc);
+        IEnumerable<T> GetAll();
+
+        T GetById(int id);
+
+        int Add(T item);
+
+        void Update(T item);
+
+        bool Remove(int id);
     }
 }

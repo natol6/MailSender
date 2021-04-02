@@ -7,7 +7,7 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
 
-namespace MailSender.lib.Models
+namespace MailSender.Models
 {
     public class SmtpAccount : INotifyPropertyChanged
     {

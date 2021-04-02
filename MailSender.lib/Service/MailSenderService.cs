@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using MailSender.lib.Models;
+using MailSender.lib.Entities;
 using System.Security;
 using MailKit.Net.Smtp;
 using MailKit;
@@ -33,44 +33,45 @@ namespace MailSender.lib.Service
             message.To.AddRange(addresses);
             message.Subject = msc.Subject;
             message.Body = new TextPart("plain") { Text = msc.Body };
-            using var client = new SmtpClient();
-            client.Connect(msc.SmtpServerUse, msc.PortUse, msc.SSLUse);
-            client.Authenticate(msc.SmtpAccountEmailUse, _TextEncoder.Decode(msc.SmtpAccountPasswordUse));
+                       
             try
             {
+                using var client = new SmtpClient();
+                client.Connect(msc.SmtpServerUse, msc.PortUse, msc.SSLUse);
+                client.Authenticate(msc.SmtpAccountEmailUse, _TextEncoder.Decode(msc.SmtpAccountPasswordUse));
                 client.Send(message);
                 client.Disconnect(true);
-                msc.Status = "Отправлено.";
+                msc.Status = "2";
                 return $"отправлено адресатам.";
             }
             catch (ObjectDisposedException)
             {
-                msc.Status = "Не отправлено. Утилизировано.";
+                msc.Status = "0";
                 return $"не отправлено (утилизировано).";
             }
             catch (ServiceNotConnectedException)
             {
-                msc.Status = "Не отправлено. Ошибка соединения с сервером.";
+                msc.Status = "0";
                 return $"не отправлено (ошибка соединения с сервером).";
             }
             catch (ServiceNotAuthenticatedException)
             {
-                msc.Status = "Не отправлено. Ошибка аутентификации.";
+                msc.Status = "0";
                 return $"не отправлено (ошибка аутентификации).";
             }
             catch (InvalidOperationException)
             {
-                msc.Status = "Не отправлено. Не указаны отправитель или адресаты.";
+                msc.Status = "0";
                 return $"не отправлено (не указан отправитель).";
             }
             catch (OperationCanceledException)
             {
-                msc.Status = "Не отправлено. Операция отменена.";
+                msc.Status = "0";
                 return $"не отправлено (операция отменена).";
             }
             catch (ProtocolException)
             {
-                msc.Status = "Не отправлено. Ошибка отправки.";
+                msc.Status = "0";
                 return $"не отправлено (ошибка отправки).";
             }
         }

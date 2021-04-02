@@ -5,12 +5,10 @@ using System.Text;
 using System.Threading.Tasks;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using System.Net;
-using System.Net.Mail;
 
-namespace MailSender.lib.Models
+namespace MailSender.Models
 {
-    public class EmailAddress : INotifyPropertyChanged
+    public class MessagePattern : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
         private int _Id;
@@ -23,24 +21,24 @@ namespace MailSender.lib.Models
                 OnPropertyChanged("Id");
             }
         }
-        private string _Person_Company;
-        public string Person_Company
+        private string _Subject;
+        public string Subject
         {
-            get => _Person_Company;
+            get => _Subject;
             set
             {
-                _Person_Company = value;
-                OnPropertyChanged("Person_Company");
+                _Subject = value;
+                OnPropertyChanged("Subject");
             }
         }
-        private string _Email;
-        public string Email
+        private string _Body;
+        public string Body
         {
-            get => _Email;
+            get => _Body;
             set
             {
-                _Email = value;
-                OnPropertyChanged("Email");
+                _Body = value;
+                OnPropertyChanged("Body");
             }
         }
         private void OnPropertyChanged([CallerMemberName] string prop = "")

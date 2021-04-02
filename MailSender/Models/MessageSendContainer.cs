@@ -7,7 +7,7 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Collections.ObjectModel;
 
-namespace MailSender.lib.Models
+namespace MailSender.Models
 {
     public class MessageSendContainer : INotifyPropertyChanged
     {

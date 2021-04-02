@@ -21,12 +21,14 @@
                         <StackPanel Orientation="Horizontal">
                             <fa:ImageAwesome Height="18" Icon="Solid_PlusCircle" 
                                                      Foreground="DarkGreen"/>
+                            <TextBlock Text="Добавить" Margin="5,0,0,0"/>
                         </StackPanel>
                     </Button>
                     <Button Name="DeleteAddress" ToolTip="Удалить" Margin="3" Command="{Binding DeleteEmailAddress}">
                         <StackPanel Orientation="Horizontal">
                             <fa:ImageAwesome Height="18" Icon="Solid_TrashAlt" 
                                                      Foreground="Tomato"/>
+                            <TextBlock Text="Удалить" Margin="5,0,0,0"/>
                         </StackPanel>
                     </Button>
                 </UniformGrid>
@@ -51,10 +53,7 @@
                         <StackPanel Orientation="Horizontal">
                             <fa:ImageAwesome Height="18" Icon="Solid_Save" Margin="5,0,0,0"
                                                      Foreground="DarkBlue"/>
-                            <fa:ImageAwesome Height="18" Icon="Solid_ArrowRight" Margin="5,0,0,0"
-                                                     Foreground="DarkBlue"/>
-                            <fa:ImageAwesome Height="18" Icon="Solid_Database" Margin="5,0,0,0"
-                                                     Foreground="DarkBlue"/>
+                            <TextBlock Text="Сохранить" Margin="5,0,0,0"/>
                         </StackPanel>
                     </Button>
                 </UniformGrid>
